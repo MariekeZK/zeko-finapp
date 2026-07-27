@@ -15,6 +15,62 @@
 <title>ZEKO Finapp</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <style>
+/* ===== LOGIN SCREEN ===== */
+#login-overlay{
+  position:fixed;inset:0;z-index:99999;
+  background:linear-gradient(145deg,#1a2a50 0%,#0d1830 100%);
+  display:flex;align-items:center;justify-content:center;
+  flex-direction:column;padding:20px;
+}
+#login-overlay.hidden{display:none}
+.login-box{
+  width:100%;max-width:340px;
+  background:rgba(255,255,255,.06);
+  border:1px solid rgba(200,184,154,.22);
+  border-radius:22px;padding:36px 32px 32px;
+  text-align:center;
+  box-shadow:0 20px 60px rgba(0,0,0,.45);
+}
+.login-logo{width:72px;height:72px;margin:0 auto 18px;display:block;border-radius:16px}
+.login-title{color:#f5ede0;font-size:1.25rem;font-weight:700;letter-spacing:-.3px;margin-bottom:4px}
+.login-sub{color:rgba(200,184,154,.7);font-size:.75rem;margin-bottom:28px}
+.login-label{display:block;text-align:left;font-size:.7rem;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:rgba(200,184,154,.7);margin-bottom:6px;margin-top:16px}
+.login-label:first-of-type{margin-top:0}
+.login-input-wrap{position:relative}
+.login-input{
+  width:100%;padding:11px 40px 11px 14px;
+  background:rgba(255,255,255,.08);
+  border:1.5px solid rgba(200,184,154,.25);
+  border-radius:10px;color:#f5ede0;font-size:.9rem;
+  outline:none;transition:border-color .2s;
+}
+.login-input:focus{border-color:rgba(200,184,154,.6)}
+.login-input::placeholder{color:rgba(255,255,255,.25)}
+.login-eye{position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;color:rgba(200,184,154,.5);cursor:pointer;font-size:15px;padding:2px 4px}
+.login-btn{
+  margin-top:22px;width:100%;padding:12px;
+  background:linear-gradient(135deg,#c8b89a,#d4c3a5);
+  color:#1a2a50;font-size:.88rem;font-weight:700;
+  border:none;border-radius:11px;cursor:pointer;
+  transition:opacity .15s;letter-spacing:.2px;
+}
+.login-btn:hover{opacity:.9}
+.login-error{color:#FCA5A5;font-size:.75rem;margin-top:10px;min-height:18px}
+.login-footer{margin-top:20px;font-size:.68rem;color:rgba(200,184,154,.35)}
+
+/* Change PW modal */
+#pw-modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.55);display:flex;align-items:flex-end;justify-content:center;z-index:10000;backdrop-filter:blur(3px)}
+#pw-modal-overlay.hidden{display:none}
+.pw-modal-box{background:#fff;border-radius:20px 20px 0 0;padding:28px 24px;width:100%;max-width:420px}
+.pw-modal-title{font-size:.95rem;font-weight:700;color:#1E293B;margin-bottom:4px}
+.pw-modal-sub{font-size:.72rem;color:#94A3B8;margin-bottom:20px}
+.pw-modal-label{display:block;font-size:.7rem;font-weight:600;text-transform:uppercase;letter-spacing:.4px;color:#64748B;margin-bottom:5px;margin-top:14px}
+.pw-modal-input{width:100%;padding:10px 14px;border:1.5px solid #E2E8F0;border-radius:10px;font-size:.9rem;outline:none;transition:border-color .15s;color:#1E293B}
+.pw-modal-input:focus{border-color:#1E3A5F}
+.pw-modal-actions{display:flex;gap:8px;margin-top:22px}
+.pw-modal-actions .btn{flex:1;justify-content:center}
+.pw-modal-err{color:#DC2626;font-size:.73rem;margin-top:8px;min-height:16px}
+
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{font-size:14px;-webkit-text-size-adjust:100%}
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,sans-serif;background:#F0F4F8;color:#1A202C;min-height:100vh;-webkit-tap-highlight-color:transparent}
@@ -279,6 +335,51 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
 </head>
 <body>
 
+<!-- ===== LOGIN OVERLAY ===== -->
+<div id="login-overlay">
+  <div class="login-box">
+    <svg class="login-logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><defs><linearGradient id="l-bg" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#1e2f58"/><stop offset="100%" stop-color="#0d1830"/></linearGradient><radialGradient id="l-glow" cx="40%" cy="35%" r="60%"><stop offset="0%" stop-color="#2a3f6e" stop-opacity="0.6"/><stop offset="100%" stop-color="#0d1830" stop-opacity="0"/></radialGradient><linearGradient id="l-lt" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#f5ede0"/><stop offset="100%" stop-color="#d4c3a5"/></linearGradient><clipPath id="l-clip"><rect width="512" height="512" rx="108" ry="108"/></clipPath></defs><rect width="512" height="512" rx="108" ry="108" fill="url(#l-bg)"/><rect width="512" height="512" rx="108" ry="108" fill="url(#l-glow)"/><circle cx="256" cy="256" r="204" fill="none" stroke="#c8b89a" stroke-width="1.2" opacity="0.30" clip-path="url(#l-clip)"/><circle cx="256" cy="256" r="188" fill="none" stroke="#c8b89a" stroke-width="0.7" opacity="0.18" clip-path="url(#l-clip)"/><rect x="253" y="142" width="1.5" height="228" fill="#c8b89a" opacity="0.45" rx="1"/><rect x="82" y="148" width="152" height="26" rx="5" fill="url(#l-lt)"/><polygon points="234,174 82,338 82,364 108,364 234,200" fill="url(#l-lt)"/><rect x="82" y="338" width="152" height="26" rx="5" fill="url(#l-lt)"/><rect x="278" y="148" width="26" height="216" rx="5" fill="url(#l-lt)"/><polygon points="304,250 430,148 400,148 278,235 278,265 304,265" fill="url(#l-lt)"/><polygon points="304,265 278,265 278,290 400,364 430,364" fill="url(#l-lt)"/><circle cx="96" cy="96" r="4" fill="#c8b89a" opacity="0.45"/><circle cx="416" cy="96" r="4" fill="#c8b89a" opacity="0.45"/><circle cx="96" cy="416" r="4" fill="#c8b89a" opacity="0.45"/><circle cx="416" cy="416" r="4" fill="#c8b89a" opacity="0.45"/></svg>
+    <div class="login-title">ZEKO Finapp</div>
+    <div class="login-sub" id="login-sub-text">Voer uw wachtwoord in om verder te gaan</div>
+    <div id="login-fields">
+      <label class="login-label" id="pw-label-1">Wachtwoord</label>
+      <div class="login-input-wrap">
+        <input class="login-input" type="password" id="login-pw" placeholder="••••••••" autocomplete="current-password">
+        <button class="login-eye" onclick="toggleEye('login-pw',this)" type="button">👁</button>
+      </div>
+      <div id="login-confirm-wrap" style="display:none">
+        <label class="login-label" style="margin-top:12px">Wachtwoord bevestigen</label>
+        <div class="login-input-wrap">
+          <input class="login-input" type="password" id="login-pw2" placeholder="••••••••" autocomplete="new-password">
+          <button class="login-eye" onclick="toggleEye('login-pw2',this)" type="button">👁</button>
+        </div>
+      </div>
+    </div>
+    <button class="login-btn" id="login-btn" onclick="loginAction()">Inloggen</button>
+    <div class="login-error" id="login-error"></div>
+    <div class="login-footer">ZEKO Financieel Dashboard &mdash; beveiligd</div>
+  </div>
+</div>
+
+<!-- Change password modal -->
+<div id="pw-modal-overlay" class="hidden" onclick="if(event.target===this)closePwModal()">
+  <div class="pw-modal-box">
+    <div class="pw-modal-title">🔒 Wachtwoord wijzigen</div>
+    <div class="pw-modal-sub">Kies een nieuw wachtwoord voor de ZEKO Finapp.</div>
+    <label class="pw-modal-label">Huidig wachtwoord</label>
+    <input class="pw-modal-input" type="password" id="pw-old" placeholder="Huidig wachtwoord" autocomplete="current-password">
+    <label class="pw-modal-label">Nieuw wachtwoord</label>
+    <input class="pw-modal-input" type="password" id="pw-new1" placeholder="Nieuw wachtwoord" autocomplete="new-password">
+    <label class="pw-modal-label">Nieuw wachtwoord bevestigen</label>
+    <input class="pw-modal-input" type="password" id="pw-new2" placeholder="Bevestig nieuw wachtwoord" autocomplete="new-password">
+    <div class="pw-modal-err" id="pw-modal-err"></div>
+    <div class="pw-modal-actions">
+      <button class="btn btn-ghost" onclick="closePwModal()">Annuleren</button>
+      <button class="btn btn-primary" onclick="changePwAction()">Opslaan</button>
+    </div>
+  </div>
+</div>
+
 <header class="app-header">
   <div class="header-left">
     <svg class="header-logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><defs><linearGradient id="zk-bg" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#1e2f58"/><stop offset="100%" stop-color="#0d1830"/></linearGradient><radialGradient id="zk-glow" cx="40%" cy="35%" r="60%"><stop offset="0%" stop-color="#2a3f6e" stop-opacity="0.6"/><stop offset="100%" stop-color="#0d1830" stop-opacity="0"/></radialGradient><linearGradient id="zk-lt" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#f5ede0"/><stop offset="100%" stop-color="#d4c3a5"/></linearGradient><clipPath id="zk-clip"><rect width="512" height="512" rx="108" ry="108"/></clipPath></defs><rect width="512" height="512" rx="108" ry="108" fill="url(#zk-bg)"/><rect width="512" height="512" rx="108" ry="108" fill="url(#zk-glow)"/><circle cx="256" cy="256" r="204" fill="none" stroke="#c8b89a" stroke-width="1.2" opacity="0.30" clip-path="url(#zk-clip)"/><circle cx="256" cy="256" r="188" fill="none" stroke="#c8b89a" stroke-width="0.7" opacity="0.18" clip-path="url(#zk-clip)"/><rect x="253" y="142" width="1.5" height="228" fill="#c8b89a" opacity="0.45" rx="1"/><rect x="82" y="148" width="152" height="26" rx="5" fill="url(#zk-lt)"/><polygon points="234,174 82,338 82,364 108,364 234,200" fill="url(#zk-lt)"/><rect x="82" y="338" width="152" height="26" rx="5" fill="url(#zk-lt)"/><rect x="278" y="148" width="26" height="216" rx="5" fill="url(#zk-lt)"/><polygon points="304,250 430,148 400,148 278,235 278,265 304,265" fill="url(#zk-lt)"/><polygon points="304,265 278,265 278,290 400,364 430,364" fill="url(#zk-lt)"/><circle cx="96" cy="96" r="4" fill="#c8b89a" opacity="0.45"/><circle cx="416" cy="96" r="4" fill="#c8b89a" opacity="0.45"/><circle cx="96" cy="416" r="4" fill="#c8b89a" opacity="0.45"/><circle cx="416" cy="416" r="4" fill="#c8b89a" opacity="0.45"/></svg>
@@ -292,6 +393,7 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
     <input type="file" id="importFile" accept=".json" style="display:none" onchange="importFile(event)">
     <button class="btn btn-outline" onclick="document.getElementById('importFile').click()">📂 Laden</button>
     <button class="btn btn-outline no-print" onclick="window.print()">🖨</button>
+    <button class="btn btn-outline no-print" onclick="openPwModal()" title="Wachtwoord wijzigen">🔒</button>
   </div>
 </header>
 
@@ -1119,8 +1221,102 @@ function showToast(msg){
 }
 
 // ================================================
+// PASSWORD PROTECTION
+// ================================================
+const PW_KEY = 'zeko-pw-hash-v1';
+const SESSION_KEY = 'zeko-session';
+
+async function sha256(str){
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+  return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
+}
+
+function isFirstRun(){ return !localStorage.getItem(PW_KEY); }
+
+function initLoginScreen(){
+  const first = isFirstRun();
+  if(first){
+    document.getElementById('login-sub-text').textContent = 'Stel een wachtwoord in om uw gegevens te beveiligen';
+    document.getElementById('pw-label-1').textContent = 'Kies een wachtwoord';
+    document.getElementById('login-confirm-wrap').style.display = 'block';
+    document.getElementById('login-btn').textContent = 'Wachtwoord instellen';
+  }
+  document.getElementById('login-pw').addEventListener('keydown', e => { if(e.key==='Enter') loginAction(); });
+  document.getElementById('login-pw2').addEventListener('keydown', e => { if(e.key==='Enter') loginAction(); });
+}
+
+async function loginAction(){
+  const pw = document.getElementById('login-pw').value;
+  const err = document.getElementById('login-error');
+  if(!pw){ err.textContent='Voer een wachtwoord in.'; return; }
+
+  if(isFirstRun()){
+    const pw2 = document.getElementById('login-pw2').value;
+    if(pw.length < 4){ err.textContent='Minimaal 4 tekens vereist.'; return; }
+    if(pw !== pw2){ err.textContent='Wachtwoorden komen niet overeen.'; return; }
+    const hash = await sha256(pw);
+    localStorage.setItem(PW_KEY, hash);
+    unlockApp();
+  } else {
+    const hash = await sha256(pw);
+    if(hash === localStorage.getItem(PW_KEY)){
+      unlockApp();
+    } else {
+      err.textContent = 'Onjuist wachtwoord. Probeer opnieuw.';
+      document.getElementById('login-pw').value = '';
+      document.getElementById('login-pw').focus();
+    }
+  }
+}
+
+function unlockApp(){
+  sessionStorage.setItem(SESSION_KEY,'1');
+  document.getElementById('login-overlay').classList.add('hidden');
+}
+
+function toggleEye(inputId, btn){
+  const inp = document.getElementById(inputId);
+  if(inp.type==='password'){ inp.type='text'; btn.textContent='🙈'; }
+  else { inp.type='password'; btn.textContent='👁'; }
+}
+
+function openPwModal(){
+  document.getElementById('pw-old').value='';
+  document.getElementById('pw-new1').value='';
+  document.getElementById('pw-new2').value='';
+  document.getElementById('pw-modal-err').textContent='';
+  document.getElementById('pw-modal-overlay').classList.remove('hidden');
+  setTimeout(()=>document.getElementById('pw-old').focus(),100);
+}
+function closePwModal(){ document.getElementById('pw-modal-overlay').classList.add('hidden'); }
+
+async function changePwAction(){
+  const old = document.getElementById('pw-old').value;
+  const n1  = document.getElementById('pw-new1').value;
+  const n2  = document.getElementById('pw-new2').value;
+  const err = document.getElementById('pw-modal-err');
+
+  const oldHash = await sha256(old);
+  if(oldHash !== localStorage.getItem(PW_KEY)){ err.textContent='Huidig wachtwoord is onjuist.'; return; }
+  if(n1.length < 4){ err.textContent='Nieuw wachtwoord: minimaal 4 tekens.'; return; }
+  if(n1 !== n2){ err.textContent='Nieuwe wachtwoorden komen niet overeen.'; return; }
+
+  const newHash = await sha256(n1);
+  localStorage.setItem(PW_KEY, newHash);
+  closePwModal();
+  showToast('🔒 Wachtwoord gewijzigd');
+}
+
+// ================================================
 // INIT
 // ================================================
+initLoginScreen();
+// Check if already authenticated this session
+if(sessionStorage.getItem(SESSION_KEY) === '1'){
+  document.getElementById('login-overlay').classList.add('hidden');
+}
+document.getElementById('login-pw').focus();
+
 const hadData=loadFromStorage();
 renderPrognose();
 if(hadData) showToast('✅ Gegevens hersteld');

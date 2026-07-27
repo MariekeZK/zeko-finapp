@@ -1,0 +1,1325 @@
+<!DOCTYPE html>
+<script type="application/json" id="cowork-artifact-meta">
+{
+  "name": "Financieel Dashboard",
+  "schemaVersion": 1,
+  "description": "Liquiditeitsprognose & Beleggingen dashboard — 14 maanden prognose met categoriebeheer, grafieken en beleggingstracking per kwartaal.",
+  "mcpTools": [],
+  "mcpServerNames": []
+}
+</script>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>ZEKO Finapp</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+/* ===== LOGIN SCREEN ===== */
+#login-overlay{
+  position:fixed;inset:0;z-index:99999;
+  background:linear-gradient(145deg,#1a2a50 0%,#0d1830 100%);
+  display:flex;align-items:center;justify-content:center;
+  flex-direction:column;padding:20px;
+}
+#login-overlay.hidden{display:none}
+.login-box{
+  width:100%;max-width:340px;
+  background:rgba(255,255,255,.06);
+  border:1px solid rgba(200,184,154,.22);
+  border-radius:22px;padding:36px 32px 32px;
+  text-align:center;
+  box-shadow:0 20px 60px rgba(0,0,0,.45);
+}
+.login-logo{width:72px;height:72px;margin:0 auto 18px;display:block;border-radius:16px}
+.login-title{color:#f5ede0;font-size:1.25rem;font-weight:700;letter-spacing:-.3px;margin-bottom:4px}
+.login-sub{color:rgba(200,184,154,.7);font-size:.75rem;margin-bottom:28px}
+.login-label{display:block;text-align:left;font-size:.7rem;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:rgba(200,184,154,.7);margin-bottom:6px;margin-top:16px}
+.login-label:first-of-type{margin-top:0}
+.login-input-wrap{position:relative}
+.login-input{
+  width:100%;padding:11px 40px 11px 14px;
+  background:rgba(255,255,255,.08);
+  border:1.5px solid rgba(200,184,154,.25);
+  border-radius:10px;color:#f5ede0;font-size:.9rem;
+  outline:none;transition:border-color .2s;
+}
+.login-input:focus{border-color:rgba(200,184,154,.6)}
+.login-input::placeholder{color:rgba(255,255,255,.25)}
+.login-eye{position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;color:rgba(200,184,154,.5);cursor:pointer;font-size:15px;padding:2px 4px}
+.login-btn{
+  margin-top:22px;width:100%;padding:12px;
+  background:linear-gradient(135deg,#c8b89a,#d4c3a5);
+  color:#1a2a50;font-size:.88rem;font-weight:700;
+  border:none;border-radius:11px;cursor:pointer;
+  transition:opacity .15s;letter-spacing:.2px;
+}
+.login-btn:hover{opacity:.9}
+.login-error{color:#FCA5A5;font-size:.75rem;margin-top:10px;min-height:18px}
+.login-footer{margin-top:20px;font-size:.68rem;color:rgba(200,184,154,.35)}
+
+/* Change PW modal */
+#pw-modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.55);display:flex;align-items:flex-end;justify-content:center;z-index:10000;backdrop-filter:blur(3px)}
+#pw-modal-overlay.hidden{display:none}
+.pw-modal-box{background:#fff;border-radius:20px 20px 0 0;padding:28px 24px;width:100%;max-width:420px}
+.pw-modal-title{font-size:.95rem;font-weight:700;color:#1E293B;margin-bottom:4px}
+.pw-modal-sub{font-size:.72rem;color:#94A3B8;margin-bottom:20px}
+.pw-modal-label{display:block;font-size:.7rem;font-weight:600;text-transform:uppercase;letter-spacing:.4px;color:#64748B;margin-bottom:5px;margin-top:14px}
+.pw-modal-input{width:100%;padding:10px 14px;border:1.5px solid #E2E8F0;border-radius:10px;font-size:.9rem;outline:none;transition:border-color .15s;color:#1E293B}
+.pw-modal-input:focus{border-color:#1E3A5F}
+.pw-modal-actions{display:flex;gap:8px;margin-top:22px}
+.pw-modal-actions .btn{flex:1;justify-content:center}
+.pw-modal-err{color:#DC2626;font-size:.73rem;margin-top:8px;min-height:16px}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:14px;-webkit-text-size-adjust:100%}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,sans-serif;background:#F0F4F8;color:#1A202C;min-height:100vh;-webkit-tap-highlight-color:transparent}
+button{cursor:pointer;font-family:inherit;-webkit-appearance:none}
+input,select{font-family:inherit;-webkit-appearance:none}
+input[type=number]{-moz-appearance:textfield}
+input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+
+/* HEADER */
+.app-header{background:linear-gradient(135deg,#1E3A5F 0%,#2D5A8E 100%);color:#fff;padding:16px 20px;display:flex;justify-content:space-between;align-items:center;box-shadow:0 2px 10px rgba(0,0,0,.25);position:sticky;top:0;z-index:200;gap:12px}
+.header-left{display:flex;align-items:center;gap:10px}
+.header-left h1{font-size:1.1rem;font-weight:700;letter-spacing:-.2px}
+.header-left p{font-size:.7rem;opacity:.7;margin-top:1px}
+.header-logo{width:36px;height:36px;flex-shrink:0;border-radius:8px}
+.header-actions{display:flex;gap:6px;align-items:center;flex-shrink:0}
+
+/* BUTTONS */
+.btn{padding:8px 14px;border-radius:8px;border:none;font-size:.78rem;font-weight:600;cursor:pointer;transition:all .15s;display:inline-flex;align-items:center;gap:5px;white-space:nowrap;min-height:36px}
+.btn-outline{background:rgba(255,255,255,.15);color:#fff;border:1.5px solid rgba(255,255,255,.35)}
+.btn-outline:hover,.btn-outline:active{background:rgba(255,255,255,.28)}
+.btn-primary{background:#2563EB;color:#fff}
+.btn-primary:hover,.btn-primary:active{background:#1D4ED8}
+.btn-ghost{background:transparent;color:#64748B;border:1.5px solid #E2E8F0}
+.btn-ghost:hover,.btn-ghost:active{background:#F1F5F9}
+.btn-sm{padding:5px 10px;font-size:.72rem;min-height:28px;border-radius:6px}
+.btn-cat-add{background:rgba(255,255,255,.18);color:#fff;border:1.5px dashed rgba(255,255,255,.5);font-size:.72rem;padding:3px 10px;border-radius:6px;min-height:26px;cursor:pointer;font-weight:600}
+.btn-cat-add:hover{background:rgba(255,255,255,.28)}
+
+/* TABS */
+.tab-nav{background:#fff;padding:0 20px;display:flex;border-bottom:2px solid #E2E8F0;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;box-shadow:0 1px 4px rgba(0,0,0,.06);position:sticky;top:53px;z-index:100}
+.tab-nav::-webkit-scrollbar{display:none}
+.tab-btn{padding:13px 18px;border:none;background:none;font-size:.82rem;font-weight:600;color:#64748B;cursor:pointer;position:relative;transition:color .15s;white-space:nowrap;flex-shrink:0}
+.tab-btn:hover{color:#2563EB}
+.tab-btn.active{color:#2563EB}
+.tab-btn.active::after{content:'';position:absolute;bottom:-2px;left:0;right:0;height:2.5px;background:#2563EB;border-radius:2px 2px 0 0}
+
+/* LAYOUT */
+.tab-content{display:none;padding:20px 20px 60px}
+.tab-content.active{display:block}
+.card{background:#fff;border-radius:14px;box-shadow:0 1px 5px rgba(0,0,0,.08),0 0 0 1px rgba(0,0,0,.04);overflow:hidden;margin-bottom:16px}
+.card-header{padding:14px 18px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #F1F5F9;gap:10px}
+.card-title{font-size:.9rem;font-weight:700;color:#1E293B}
+
+/* TABLE */
+.table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.table-wrap::-webkit-scrollbar{height:5px}
+.table-wrap::-webkit-scrollbar-track{background:#F1F5F9}
+.table-wrap::-webkit-scrollbar-thumb{background:#CBD5E1;border-radius:3px}
+.ftable{width:100%;border-collapse:collapse;min-width:800px}
+.ftable th,.ftable td{padding:0;border:none}
+.col-lbl{min-width:190px;width:190px;position:sticky;left:0;z-index:10;background:#fff}
+.col-mo{min-width:90px;width:90px;text-align:right}
+
+/* Table header */
+.tr-head th{background:#1E3A5F;color:#fff;font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.5px;padding:10px;white-space:nowrap;position:sticky;top:0}
+.tr-head .col-lbl{background:#1E3A5F;z-index:20;top:0}
+
+/* Section header */
+.tr-sec .col-lbl{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:#fff;display:flex;align-items:center;gap:6px}
+
+/* Item rows */
+.tr-item td{border-bottom:1px solid #F8FAFC}
+.tr-item .col-lbl{padding:0 8px 0 20px;display:flex;align-items:center;gap:6px;background:#fff;min-height:38px}
+.item-name-inp{border:none;outline:none;background:transparent;font-size:.78rem;color:#374151;flex:1;min-width:0;padding:0}
+.item-name-inp:focus{color:#1E3A5F}
+.tr-item:hover .col-lbl{background:#FAFCFF}
+
+/* Cell with sub-entries button */
+.cell-td{padding:0;position:relative}
+.cell-inner{display:flex;align-items:center;position:relative}
+.cell-inp{
+  flex:1;border:none;outline:none;text-align:right;
+  padding:9px 6px 9px 6px;font-size:.78rem;background:transparent;color:#374151;
+  min-width:0;transition:background .1s;width:100%;
+}
+.cell-inp:focus{background:#EFF6FF;color:#1E3A5F}
+.cell-inp.neg{color:#DC2626}
+.cell-inp.pos{color:#059669}
+.cell-inp.recur-val{color:#93C5FD;font-style:italic}
+.cell-inp[readonly]{cursor:default}
+
+/* Sub-entries toggle button */
+.cell-sub-btn{
+  flex-shrink:0;width:20px;height:100%;min-height:36px;
+  background:none;border:none;cursor:pointer;
+  font-size:10px;color:#CBD5E1;
+  display:flex;align-items:center;justify-content:center;
+  padding:0 4px 0 0;
+  opacity:0;transition:opacity .15s;
+}
+.cell-sub-btn.has-subs{opacity:1;color:#2563EB}
+.tr-item:hover .cell-sub-btn{opacity:1}
+@media(hover:none){.cell-sub-btn{opacity:1!important}}
+
+/* Recurring badge on item label */
+.recur-badge{
+  font-size:.62rem;background:#DBEAFE;color:#1D4ED8;
+  border-radius:4px;padding:1px 5px;font-weight:700;flex-shrink:0;cursor:pointer;
+}
+.recur-badge:hover{background:#BFDBFE}
+
+.btn-del{background:none;border:none;color:#CBD5E1;font-size:13px;cursor:pointer;padding:4px 4px;border-radius:5px;flex-shrink:0;min-width:22px;min-height:22px;display:flex;align-items:center;justify-content:center}
+.btn-del:hover,.btn-del:active{color:#EF4444;background:#FEF2F2}
+@media(hover:none){.btn-del{opacity:1!important;color:#D1D5DB}}
+
+/* Subtotal row */
+.tr-subtt td{background:#F8FAFC;padding:7px 10px;font-size:.75rem;font-weight:700;color:#475569;border-bottom:2px solid #E2E8F0}
+.tr-subtt .col-lbl{background:#F8FAFC;font-style:italic;padding-left:22px}
+
+/* Summary rows */
+.tr-mut td,.tr-sal td,.tr-liq td{padding:10px;font-size:.78rem;font-weight:600}
+.tr-mut td{background:#DBEAFE;color:#1E3A5F}
+.tr-mut .col-lbl{background:#DBEAFE}
+.tr-sal td{background:#EFF6FF;color:#1E3A5F}
+.tr-sal .col-lbl{background:#EFF6FF}
+.tr-liq td{background:#1E3A5F;color:#fff;font-size:.85rem;font-weight:700}
+.tr-liq .col-lbl{background:#1E3A5F}
+.tr-liq .liq-pos{color:#6EE7B7}
+.tr-liq .liq-neg{color:#FCA5A5}
+.num{text-align:right;font-variant-numeric:tabular-nums}
+
+/* Color dot */
+.cdot{display:inline-block;width:9px;height:9px;border-radius:50%;flex-shrink:0;margin-left:2px;cursor:pointer;transition:transform .15s}
+.cdot:hover{transform:scale(1.5)}
+.cdot-lg{display:inline-block;width:13px;height:13px;border-radius:50%;flex-shrink:0;cursor:pointer;border:2px solid rgba(255,255,255,.6);transition:transform .15s}
+.cdot-lg:hover{transform:scale(1.3)}
+
+/* Bank accounts */
+.bank-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.bank-item{display:flex;align-items:center;gap:8px;padding:9px 12px;background:#F8FAFC;border-radius:10px;border:1px solid #E8EEF4}
+.bank-item-name{flex:1;min-width:0}
+.bank-name-inp{width:100%;background:transparent;border:none;outline:none;font-size:.78rem;color:#374151}
+.bank-val-inp{width:85px;text-align:right;background:transparent;border:none;outline:none;font-size:.82rem;font-weight:600;color:#1E3A5F;border-bottom:1.5px dashed #CBD5E1;padding-bottom:1px}
+.bank-total{padding:12px 16px;display:flex;justify-content:space-between;align-items:center;background:#1E3A5F;color:#fff;border-radius:10px;margin-top:10px;font-weight:700;font-size:.85rem}
+
+/* Charts */
+.charts-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.chart-card{background:#fff;border-radius:14px;box-shadow:0 1px 5px rgba(0,0,0,.08),0 0 0 1px rgba(0,0,0,.04);padding:18px}
+.chart-card-wide{grid-column:1/-1}
+.chart-title{font-size:.85rem;font-weight:700;color:#1E293B;margin-bottom:14px}
+.chart-wrap{position:relative;height:220px}
+.chart-wrap-lg{height:260px}
+
+/* Investments */
+.inv-charts-row{display:grid;grid-template-columns:2fr 1fr;gap:16px;margin-top:16px}
+.inv-note-inp{
+  width:100%;border:none;outline:none;background:transparent;
+  font-size:.72rem;color:#64748B;font-style:italic;
+  border-bottom:1px dashed transparent;padding:2px 4px;
+}
+.inv-note-inp:focus{border-bottom-color:#94A3B8;background:#F8FAFC;color:#374151}
+.inv-note-inp::placeholder{color:#CBD5E1}
+.col-note{min-width:130px;width:130px;text-align:left;padding:0 8px}
+
+/* ===== SUB-ENTRIES PANEL ===== */
+#subs-backdrop{display:none;position:fixed;inset:0;z-index:490;background:rgba(0,0,0,.15);backdrop-filter:blur(1px)}
+#subs-panel{
+  display:none;position:fixed;z-index:500;
+  background:#fff;box-shadow:0 8px 40px rgba(0,0,0,.2);
+  overflow:hidden;
+}
+.sp-header{
+  background:#1E3A5F;color:#fff;padding:14px 16px;
+  display:flex;justify-content:space-between;align-items:center;
+}
+.sp-title{font-size:.85rem;font-weight:700;line-height:1.3}
+.sp-close{background:rgba(255,255,255,.2);border:none;color:#fff;width:26px;height:26px;border-radius:50%;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+#sp-list{max-height:240px;overflow-y:auto;padding:8px 0}
+.sp-entry{display:flex;align-items:center;gap:8px;padding:7px 14px;border-bottom:1px solid #F8FAFC}
+.sp-entry-date{font-size:.72rem;color:#94A3B8;min-width:58px}
+.sp-entry-desc{flex:1;font-size:.78rem;color:#374151;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sp-entry-amount{font-size:.78rem;font-weight:600;min-width:65px;text-align:right}
+.sp-entry-amount.neg{color:#DC2626}
+.sp-entry-amount.pos{color:#059669}
+.sp-del{background:none;border:none;color:#E2E8F0;font-size:13px;cursor:pointer;padding:2px 4px;border-radius:4px;flex-shrink:0}
+.sp-del:hover{color:#EF4444;background:#FEF2F2}
+.sp-add-row{
+  display:grid;
+  grid-template-columns:90px 1fr 80px 32px;
+  gap:6px;padding:10px 14px;background:#F8FAFC;border-top:1px solid #E2E8F0;
+}
+.sp-add-row input{
+  border:1.5px solid #E2E8F0;border-radius:7px;padding:6px 8px;
+  font-size:.78rem;outline:none;color:#374151;background:#fff;width:100%;
+}
+.sp-add-row input:focus{border-color:#2563EB}
+.sp-add-row input[type=number]{text-align:right}
+.sp-add-btn{
+  background:#2563EB;color:#fff;border:none;border-radius:7px;
+  cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;
+}
+.sp-add-btn:hover{background:#1D4ED8}
+.sp-footer{
+  padding:11px 16px;display:flex;justify-content:space-between;align-items:center;
+  background:#EFF6FF;border-top:1px solid #DBEAFE;
+}
+.sp-footer-label{font-size:.75rem;color:#64748B;font-weight:600}
+.sp-total{font-size:.95rem;font-weight:700;color:#1E3A5F}
+.sp-empty{padding:20px;text-align:center;color:#94A3B8;font-size:.8rem}
+
+/* ===== MODAL (Add / Color / Recurring) ===== */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);display:flex;align-items:flex-end;justify-content:center;z-index:1000;backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px)}
+.modal{background:#fff;border-radius:20px 20px 0 0;padding:24px;width:100%;max-width:460px;box-shadow:0 -4px 30px rgba(0,0,0,.2);animation:slideUp .25s ease;max-height:90vh;overflow-y:auto}
+@keyframes slideUp{from{transform:translateY(40px);opacity:0}to{transform:translateY(0);opacity:1}}
+.modal-handle{width:36px;height:4px;background:#E2E8F0;border-radius:2px;margin:0 auto 18px}
+.modal h3{font-size:.95rem;font-weight:700;margin-bottom:16px;color:#1E293B}
+.modal label{display:block;font-size:.75rem;color:#64748B;margin-bottom:5px;margin-top:14px;font-weight:600;text-transform:uppercase;letter-spacing:.4px}
+.modal input[type=text],.modal input[type=number]{width:100%;padding:10px 14px;border:1.5px solid #E2E8F0;border-radius:10px;font-size:.9rem;outline:none;transition:border-color .15s;color:#1E293B}
+.modal input[type=text]:focus,.modal input[type=number]:focus{border-color:#2563EB}
+.modal select{width:100%;padding:10px 14px;border:1.5px solid #E2E8F0;border-radius:10px;font-size:.9rem;outline:none;color:#1E293B;background:#fff;cursor:pointer}
+.modal select:focus{border-color:#2563EB}
+.color-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px}
+.col-opt{width:28px;height:28px;border-radius:50%;cursor:pointer;border:3px solid transparent;transition:all .15s}
+.col-opt:hover{transform:scale(1.15)}
+.col-opt.sel{border-color:#fff;box-shadow:0 0 0 2.5px #2563EB}
+.modal-actions{display:flex;gap:8px;margin-top:20px}
+.modal-actions .btn{flex:1;justify-content:center}
+
+/* Recurring toggle */
+.recur-toggle-row{display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid #F1F5F9}
+.recur-toggle-label{font-size:.85rem;font-weight:600;color:#374151}
+.toggle-switch{position:relative;width:44px;height:24px;flex-shrink:0}
+.toggle-switch input{opacity:0;width:0;height:0}
+.toggle-slider{position:absolute;cursor:pointer;inset:0;background:#CBD5E1;border-radius:24px;transition:.3s}
+.toggle-slider::before{content:'';position:absolute;height:18px;width:18px;left:3px;bottom:3px;background:#fff;border-radius:50%;transition:.3s}
+.toggle-switch input:checked+.toggle-slider{background:#2563EB}
+.toggle-switch input:checked+.toggle-slider::before{transform:translateX(20px)}
+.recur-info{font-size:.72rem;color:#94A3B8;margin-top:12px;line-height:1.5}
+
+/* Print */
+@media print{
+  .app-header .header-actions,.tab-nav,.btn-del,.btn-cat-add,.no-print,.tab-content:not(.active){display:none!important}
+  .tab-content.active{padding:0}
+  body{background:#fff}
+  .card{box-shadow:none;border:1px solid #E2E8F0;margin-bottom:12px}
+  .col-lbl{position:static}
+  .tr-head .col-lbl{position:static}
+  .cell-sub-btn{display:none!important}
+  @page{margin:12mm;size:A4 landscape}
+}
+
+/* Responsive */
+@media(max-width:640px){
+  .app-header{padding:13px 16px}
+  .tab-content{padding:14px 14px 70px}
+  .charts-grid{grid-template-columns:1fr}
+  .charts-grid .chart-card-wide{grid-column:1}
+  .inv-charts-row{grid-template-columns:1fr}
+  .bank-grid{grid-template-columns:1fr}
+  .header-left h1{font-size:1rem}
+  .col-lbl{min-width:160px;width:160px}
+  .col-mo{min-width:82px;width:82px}
+  .btn{padding:7px 11px;font-size:.74rem}
+  #subs-panel{border-radius:20px 20px 0 0!important}
+}
+
+/* Misc */
+.tip{font-size:.72rem;color:#94A3B8;padding:10px 0 0;line-height:1.5}
+.pos-text{color:#059669}
+.neg-text{color:#DC2626}
+</style>
+</head>
+<body>
+
+<!-- ===== LOGIN OVERLAY ===== -->
+<div id="login-overlay">
+  <div class="login-box">
+    <svg class="login-logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><defs><linearGradient id="l-bg" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#1e2f58"/><stop offset="100%" stop-color="#0d1830"/></linearGradient><radialGradient id="l-glow" cx="40%" cy="35%" r="60%"><stop offset="0%" stop-color="#2a3f6e" stop-opacity="0.6"/><stop offset="100%" stop-color="#0d1830" stop-opacity="0"/></radialGradient><linearGradient id="l-lt" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#f5ede0"/><stop offset="100%" stop-color="#d4c3a5"/></linearGradient><clipPath id="l-clip"><rect width="512" height="512" rx="108" ry="108"/></clipPath></defs><rect width="512" height="512" rx="108" ry="108" fill="url(#l-bg)"/><rect width="512" height="512" rx="108" ry="108" fill="url(#l-glow)"/><circle cx="256" cy="256" r="204" fill="none" stroke="#c8b89a" stroke-width="1.2" opacity="0.30" clip-path="url(#l-clip)"/><circle cx="256" cy="256" r="188" fill="none" stroke="#c8b89a" stroke-width="0.7" opacity="0.18" clip-path="url(#l-clip)"/><rect x="253" y="142" width="1.5" height="228" fill="#c8b89a" opacity="0.45" rx="1"/><rect x="82" y="148" width="152" height="26" rx="5" fill="url(#l-lt)"/><polygon points="234,174 82,338 82,364 108,364 234,200" fill="url(#l-lt)"/><rect x="82" y="338" width="152" height="26" rx="5" fill="url(#l-lt)"/><rect x="278" y="148" width="26" height="216" rx="5" fill="url(#l-lt)"/><polygon points="304,250 430,148 400,148 278,235 278,265 304,265" fill="url(#l-lt)"/><polygon points="304,265 278,265 278,290 400,364 430,364" fill="url(#l-lt)"/><circle cx="96" cy="96" r="4" fill="#c8b89a" opacity="0.45"/><circle cx="416" cy="96" r="4" fill="#c8b89a" opacity="0.45"/><circle cx="96" cy="416" r="4" fill="#c8b89a" opacity="0.45"/><circle cx="416" cy="416" r="4" fill="#c8b89a" opacity="0.45"/></svg>
+    <div class="login-title">ZEKO Finapp</div>
+    <div class="login-sub" id="login-sub-text">Voer uw wachtwoord in om verder te gaan</div>
+    <div id="login-fields">
+      <label class="login-label" id="pw-label-1">Wachtwoord</label>
+      <div class="login-input-wrap">
+        <input class="login-input" type="password" id="login-pw" placeholder="••••••••" autocomplete="current-password">
+        <button class="login-eye" onclick="toggleEye('login-pw',this)" type="button">👁</button>
+      </div>
+      <div id="login-confirm-wrap" style="display:none">
+        <label class="login-label" style="margin-top:12px">Wachtwoord bevestigen</label>
+        <div class="login-input-wrap">
+          <input class="login-input" type="password" id="login-pw2" placeholder="••••••••" autocomplete="new-password">
+          <button class="login-eye" onclick="toggleEye('login-pw2',this)" type="button">👁</button>
+        </div>
+      </div>
+    </div>
+    <button class="login-btn" id="login-btn" onclick="loginAction()">Inloggen</button>
+    <div class="login-error" id="login-error"></div>
+    <div class="login-footer">ZEKO Financieel Dashboard &mdash; beveiligd</div>
+  </div>
+</div>
+
+<!-- Change password modal -->
+<div id="pw-modal-overlay" class="hidden" onclick="if(event.target===this)closePwModal()">
+  <div class="pw-modal-box">
+    <div class="pw-modal-title">🔒 Wachtwoord wijzigen</div>
+    <div class="pw-modal-sub">Kies een nieuw wachtwoord voor de ZEKO Finapp.</div>
+    <label class="pw-modal-label">Huidig wachtwoord</label>
+    <input class="pw-modal-input" type="password" id="pw-old" placeholder="Huidig wachtwoord" autocomplete="current-password">
+    <label class="pw-modal-label">Nieuw wachtwoord</label>
+    <input class="pw-modal-input" type="password" id="pw-new1" placeholder="Nieuw wachtwoord" autocomplete="new-password">
+    <label class="pw-modal-label">Nieuw wachtwoord bevestigen</label>
+    <input class="pw-modal-input" type="password" id="pw-new2" placeholder="Bevestig nieuw wachtwoord" autocomplete="new-password">
+    <div class="pw-modal-err" id="pw-modal-err"></div>
+    <div class="pw-modal-actions">
+      <button class="btn btn-ghost" onclick="closePwModal()">Annuleren</button>
+      <button class="btn btn-primary" onclick="changePwAction()">Opslaan</button>
+    </div>
+  </div>
+</div>
+
+<header class="app-header">
+  <div class="header-left">
+    <svg class="header-logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><defs><linearGradient id="zk-bg" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#1e2f58"/><stop offset="100%" stop-color="#0d1830"/></linearGradient><radialGradient id="zk-glow" cx="40%" cy="35%" r="60%"><stop offset="0%" stop-color="#2a3f6e" stop-opacity="0.6"/><stop offset="100%" stop-color="#0d1830" stop-opacity="0"/></radialGradient><linearGradient id="zk-lt" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#f5ede0"/><stop offset="100%" stop-color="#d4c3a5"/></linearGradient><clipPath id="zk-clip"><rect width="512" height="512" rx="108" ry="108"/></clipPath></defs><rect width="512" height="512" rx="108" ry="108" fill="url(#zk-bg)"/><rect width="512" height="512" rx="108" ry="108" fill="url(#zk-glow)"/><circle cx="256" cy="256" r="204" fill="none" stroke="#c8b89a" stroke-width="1.2" opacity="0.30" clip-path="url(#zk-clip)"/><circle cx="256" cy="256" r="188" fill="none" stroke="#c8b89a" stroke-width="0.7" opacity="0.18" clip-path="url(#zk-clip)"/><rect x="253" y="142" width="1.5" height="228" fill="#c8b89a" opacity="0.45" rx="1"/><rect x="82" y="148" width="152" height="26" rx="5" fill="url(#zk-lt)"/><polygon points="234,174 82,338 82,364 108,364 234,200" fill="url(#zk-lt)"/><rect x="82" y="338" width="152" height="26" rx="5" fill="url(#zk-lt)"/><rect x="278" y="148" width="26" height="216" rx="5" fill="url(#zk-lt)"/><polygon points="304,250 430,148 400,148 278,235 278,265 304,265" fill="url(#zk-lt)"/><polygon points="304,265 278,265 278,290 400,364 430,364" fill="url(#zk-lt)"/><circle cx="96" cy="96" r="4" fill="#c8b89a" opacity="0.45"/><circle cx="416" cy="96" r="4" fill="#c8b89a" opacity="0.45"/><circle cx="96" cy="416" r="4" fill="#c8b89a" opacity="0.45"/><circle cx="416" cy="416" r="4" fill="#c8b89a" opacity="0.45"/></svg>
+    <div>
+      <h1>ZEKO Finapp</h1>
+      <p>Liquiditeitsprognose &amp; Beleggingen</p>
+    </div>
+  </div>
+  <div class="header-actions">
+    <button class="btn btn-outline" onclick="exportData()">💾 Opslaan</button>
+    <input type="file" id="importFile" accept=".json" style="display:none" onchange="importFile(event)">
+    <button class="btn btn-outline" onclick="document.getElementById('importFile').click()">📂 Laden</button>
+    <button class="btn btn-outline no-print" onclick="window.print()">🖨</button>
+    <button class="btn btn-outline no-print" onclick="openPwModal()" title="Wachtwoord wijzigen">🔒</button>
+  </div>
+</header>
+
+<nav class="tab-nav">
+  <button class="tab-btn active" onclick="showTab('prognose',this)">Liquiditeitsprognose</button>
+  <button class="tab-btn" onclick="showTab('grafieken',this)">📈 Grafieken</button>
+  <button class="tab-btn" onclick="showTab('beleggingen',this)">💼 Beleggingen</button>
+</nav>
+
+<div id="tab-prognose" class="tab-content active"></div>
+<div id="tab-grafieken" class="tab-content"></div>
+<div id="tab-beleggingen" class="tab-content"></div>
+
+<!-- Sub-entries backdrop + panel -->
+<div id="subs-backdrop" onclick="closeSubsPanel()"></div>
+<div id="subs-panel">
+  <div class="sp-header">
+    <div class="sp-title" id="sp-title">Boodschappen — Jul '26</div>
+    <button class="sp-close" onclick="closeSubsPanel()">×</button>
+  </div>
+  <div id="sp-list"></div>
+  <div class="sp-add-row">
+    <input type="date" id="sp-date">
+    <input type="text" id="sp-desc" placeholder="Omschrijving (optioneel)">
+    <input type="number" id="sp-amount" placeholder="Bedrag" step="any">
+    <button class="sp-add-btn" onclick="addSubEntry()" title="Toevoegen">+</button>
+  </div>
+  <div class="sp-footer">
+    <span class="sp-footer-label">Totaal</span>
+    <span class="sp-total" id="sp-total">—</span>
+  </div>
+</div>
+
+<!-- Modal (add cat / color / recurring) -->
+<div id="modal-bg" class="modal-overlay" style="display:none" onclick="handleModalBg(event)">
+  <div class="modal" id="modal-box">
+    <div class="modal-handle"></div>
+    <h3 id="modal-title">Nieuwe categorie</h3>
+    <div id="modal-body"></div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeModal()">Annuleren</button>
+      <button class="btn btn-primary" id="modal-confirm-btn" onclick="confirmModal()">Toevoegen</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ================================================
+// CONSTANTS
+// ================================================
+const MONTHS = [
+  {k:'2026-07',l:"Jul '26"},{k:'2026-08',l:"Aug '26"},
+  {k:'2026-09',l:"Sep '26"},{k:'2026-10',l:"Okt '26"},
+  {k:'2026-11',l:"Nov '26"},{k:'2026-12',l:"Dec '26"},
+  {k:'2027-01',l:"Jan '27"},{k:'2027-02',l:"Feb '27"},
+  {k:'2027-03',l:"Mrt '27"},{k:'2027-04',l:"Apr '27"},
+  {k:'2027-05',l:"Mei '27"},{k:'2027-06',l:"Jun '27"},
+  {k:'2027-07',l:"Jul '27"},{k:'2027-08',l:"Aug '27"},
+];
+const NM = MONTHS.length;
+
+const COLORS = [
+  '#3B82F6','#10B981','#F97316','#8B5CF6','#EF4444',
+  '#EC4899','#06B6D4','#84CC16','#F59E0B','#6366F1',
+  '#14B8A6','#F43F5E','#A855F7','#22C55E','#0EA5E9',
+  '#D97706','#7C3AED','#059669','#DC2626','#2563EB',
+];
+
+let _id = 300;
+const uid = () => 'x' + (_id++);
+function zeros(n=NM){ return Array(n).fill(0); }
+function newSubs(n=NM){ return Array(n).fill(null).map(()=>[]); }
+function prefill(v,n=NM,c=2){ return Array(n).fill(0).map((_,i)=>i<c?v:0); }
+
+// ================================================
+// DEFAULT RECURRING OBJECT
+// ================================================
+function mkRecur(){ return {on:false,freq:'monthly',value:0}; }
+
+// ================================================
+// STATE
+// ================================================
+let S = {
+  bank:[
+    {id:'b1',name:'Bankrekening 1',val:10},
+    {id:'b2',name:'Bankrekening 2',val:10},
+    {id:'b3',name:'Bankrekening 3',val:0},
+    {id:'b4',name:'Spaarrekening 1',val:0},
+    {id:'b5',name:'Spaarrekening 2',val:2750},
+  ],
+  income:[
+    {id:'i1',name:'Loon',v:prefill(5000),subs:newSubs(),recur:mkRecur()},
+    {id:'i2',name:'Overige inkomsten',v:prefill(500),subs:newSubs(),recur:mkRecur()},
+  ],
+  cats:[
+    {id:'c1',name:'Wonen',color:'#3B82F6',items:[
+      {id:'e1',name:'Hypotheek',v:prefill(-1000),subs:newSubs(),recur:{on:true,freq:'monthly',value:-1000}},
+      {id:'e2',name:'Energie',v:prefill(-200),subs:newSubs(),recur:{on:true,freq:'monthly',value:-200}},
+      {id:'e3',name:'Water',v:prefill(-35),subs:newSubs(),recur:mkRecur()},
+      {id:'e4',name:'Internet / TV',v:prefill(-60),subs:newSubs(),recur:{on:true,freq:'monthly',value:-60}},
+      {id:'e5',name:'Verzekering',v:prefill(-250),subs:newSubs(),recur:mkRecur()},
+      {id:'e6',name:'Gem. heffingen',v:prefill(-100),subs:newSubs(),recur:mkRecur()},
+    ]},
+    {id:'c2',name:'Levensonderhoud',color:'#F97316',items:[
+      {id:'e7',name:'Boodschappen',v:prefill(-500),subs:newSubs(),recur:{on:true,freq:'monthly',value:-500}},
+      {id:'e8',name:'Reiskosten',v:prefill(-150),subs:newSubs(),recur:mkRecur()},
+    ]},
+    {id:'c3',name:'Variabel',color:'#8B5CF6',items:[
+      {id:'e9',name:'Onvoorzien',v:prefill(-100),subs:newSubs(),recur:mkRecur()},
+      {id:'e10',name:'Creditcard',v:zeros(),subs:newSubs(),recur:mkRecur()},
+      {id:'e11',name:'Vakantie',v:zeros(),subs:newSubs(),recur:mkRecur()},
+    ]},
+    {id:'c4',name:'Financieel',color:'#10B981',items:[
+      {id:'e12',name:'Sparen',v:prefill(-100),subs:newSubs(),recur:{on:true,freq:'monthly',value:-100}},
+      {id:'e13',name:'IB 2023',v:zeros(),subs:newSubs(),recur:mkRecur()},
+      {id:'e14',name:'IB 2024',v:zeros(),subs:newSubs(),recur:mkRecur()},
+      {id:'e15',name:'IB 2025',v:zeros(),subs:newSubs(),recur:mkRecur()},
+      {id:'e16',name:'Vakantiegeld',v:zeros(),subs:newSubs(),recur:mkRecur()},
+      {id:'e17',name:'Aflossing lening',v:zeros(),subs:newSubs(),recur:mkRecur()},
+    ]},
+  ],
+  inv:{
+    types:[
+      {id:'inv1',name:"Aandelen / ETF's",color:'#3B82F6',items:[{id:'ia1',name:'Voorbeeld: VWCE',note:'',v:zeros()}]},
+      {id:'inv2',name:'Vastgoed',color:'#F97316',items:[{id:'ia2',name:'Eigen woning',note:'',v:zeros()}]},
+      {id:'inv3',name:'Spaargeld',color:'#10B981',items:[{id:'ia3',name:'Spaarrekening',note:'',v:zeros()}]},
+      {id:'inv4',name:'Pensioen',color:'#8B5CF6',items:[{id:'ia4',name:'Pensioenopbouw',note:'',v:zeros()}]},
+      {id:'inv5',name:'Crypto',color:'#EF4444',items:[{id:'ia5',name:'Bitcoin',note:'',v:zeros()}]},
+    ]
+  }
+};
+
+// ================================================
+// MIGRATE: ensure all items have required fields
+// ================================================
+function migrate(state) {
+  const ensureItem = it => {
+    if (!it.subs || !Array.isArray(it.subs) || it.subs.length !== NM) it.subs = newSubs();
+    it.subs = it.subs.map(s => (Array.isArray(s) ? s : []));
+    if (!it.recur || typeof it.recur !== 'object') it.recur = mkRecur();
+  };
+  (state.income || []).forEach(ensureItem);
+  (state.cats || []).forEach(c => (c.items || []).forEach(ensureItem));
+  (state.inv?.types || []).forEach(t => (t.items || []).forEach(it => {
+    if (it.note === undefined) it.note = '';
+    if (!it.v || it.v.length !== NM) it.v = zeros();
+  }));
+  return state;
+}
+
+// ================================================
+// VALUE CALCULATION (priority: subs > direct > recurring)
+// ================================================
+function monthMatchesFreq(mi, freq) {
+  if (freq === 'monthly') return true;
+  if (freq === 'quarterly') return mi % 3 === 0;        // Jul, Okt, Jan, Apr, Jul
+  if (freq === 'yearly') return mi === 0 || mi === 12;  // Jul '26 and Jul '27
+  return false;
+}
+
+function getVal(item, mi) {
+  // 1. Sub-entries take priority
+  const subs = item.subs && item.subs[mi];
+  if (subs && subs.length > 0) {
+    return subs.reduce((s, e) => s + (parseFloat(e.amount) || 0), 0);
+  }
+  // 2. Direct input
+  const direct = parseFloat(item.v[mi]) || 0;
+  if (direct !== 0) return direct;
+  // 3. Recurring default
+  if (item.recur && item.recur.on && monthMatchesFreq(mi, item.recur.freq)) {
+    return parseFloat(item.recur.value) || 0;
+  }
+  return 0;
+}
+
+// ================================================
+// CALCULATIONS (formules identiek aan Excel)
+// ================================================
+function initBal(){ return S.bank.reduce((s,a)=>s+(parseFloat(a.val)||0),0); }
+function mutaties(mi){
+  let t=0;
+  S.income.forEach(it=>t+=getVal(it,mi));
+  S.cats.forEach(c=>c.items.forEach(it=>t+=getVal(it,mi)));
+  return t;
+}
+function saldo(mi){ return mi===0?initBal():liquiditeit(mi-1); }
+function liquiditeit(mi){ return mutaties(mi)+saldo(mi); }
+
+function invTypeTotal(type,mi){ return type.items.reduce((s,it)=>s+(parseFloat(it.v[mi])||0),0); }
+function invGrandTotal(mi){ return S.inv.types.reduce((s,t)=>s+invTypeTotal(t,mi),0); }
+
+// ================================================
+// FORMATTING
+// ================================================
+const fmtEur = new Intl.NumberFormat('nl-NL',{style:'currency',currency:'EUR',minimumFractionDigits:0,maximumFractionDigits:0});
+function fmt(v){ const n=parseFloat(v)||0; return n===0?'—':fmtEur.format(n); }
+function fmtSign(v){ const n=parseFloat(v)||0; return n>0?'pos-text':n<0?'neg-text':''; }
+function inputCls(v){ const n=parseFloat(v)||0; return n>0?'pos':n<0?'neg':''; }
+function esc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+// ================================================
+// RENDER: PROGNOSE
+// ================================================
+function renderPrognose(){
+  const mo_th = MONTHS.map(m=>`<th class="col-mo">${m.l}</th>`).join('');
+  const empties = MONTHS.map(()=>'<td class="col-mo"></td>').join('');
+
+  const incRows = S.income.map(it=>itemRow(it,'inc',null,'#059669')).join('');
+  const catSections = S.cats.map(cat=>{
+    const items = cat.items.map(it=>itemRow(it,'cat',cat.id,cat.color)).join('');
+    return `
+      <tr class="tr-sec" style="background:${cat.color}">
+        <td class="col-lbl" style="background:${cat.color};display:flex;align-items:center;justify-content:space-between;gap:6px">
+          <span style="display:flex;align-items:center;gap:8px">
+            <span class="cdot-lg" style="background:${cat.color};border-color:rgba(255,255,255,.7)" onclick="editColor('cat','${cat.id}')" title="Kleur aanpassen"></span>
+            <span style="font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:#fff">${esc(cat.name)}</span>
+          </span>
+          <span style="display:flex;gap:5px;align-items:center;flex-shrink:0">
+            <button class="btn-cat-add no-print" onclick="addItem('${cat.id}')">+ Item</button>
+            <button class="btn-del no-print" style="color:rgba(255,255,255,.6)" onclick="delCat('${cat.id}')">✕</button>
+          </span>
+        </td>${empties}
+      </tr>${items}`;
+  }).join('');
+
+  const mutRow = MONTHS.map((_,mi)=>{ const v=mutaties(mi); return `<td class="col-mo num ${fmtSign(v)}" id="m${mi}">${fmt(v)}</td>`; }).join('');
+  const salRow = MONTHS.map((_,mi)=>{ const v=saldo(mi); return `<td class="col-mo num" id="s${mi}">${fmt(v)}</td>`; }).join('');
+  const liqRow = MONTHS.map((_,mi)=>{ const v=liquiditeit(mi); return `<td class="col-mo num ${v>=0?'liq-pos':'liq-neg'}" id="l${mi}">${fmt(v)}</td>`; }).join('');
+
+  const bankRows = S.bank.map(a=>`
+    <div class="bank-item">
+      <div class="bank-item-name"><input class="bank-name-inp" type="text" value="${esc(a.name)}" onchange="S.bank.find(x=>x.id==='${a.id}').name=this.value;saveToStorage()"></div>
+      <input class="bank-val-inp" type="number" value="${a.val||''}" placeholder="0" onchange="updBank('${a.id}',this.value)">
+      <button class="btn-del" onclick="delBank('${a.id}')">✕</button>
+    </div>`).join('');
+
+  document.getElementById('tab-prognose').innerHTML = `
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">Liquiditeitsprognose — Jul 2026 t/m Aug 2027</span>
+        <button class="btn btn-ghost btn-sm no-print" onclick="openAddModal('cat')">+ Categorie</button>
+      </div>
+      <div class="table-wrap">
+        <table class="ftable">
+          <thead><tr class="tr-head"><th class="col-lbl">Omschrijving</th>${mo_th}</tr></thead>
+          <tbody>
+            <tr class="tr-sec" style="background:#059669">
+              <td class="col-lbl" style="background:#059669;display:flex;align-items:center;justify-content:space-between">
+                <span style="font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:#fff">Inkomsten</span>
+                <button class="btn-cat-add no-print" onclick="addIncome()">+ Item</button>
+              </td>${empties}
+            </tr>
+            ${incRows}${catSections}
+            <tr class="tr-mut"><td class="col-lbl">Mutaties per maand</td>${mutRow}</tr>
+            <tr class="tr-sal"><td class="col-lbl">Saldo bank (begin maand)</td>${salRow}</tr>
+            <tr class="tr-liq"><td class="col-lbl">💰 Liquiditeit per maand</td>${liqRow}</tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">Beginsaldo bankrekeningen</span>
+        <button class="btn btn-ghost btn-sm no-print" onclick="addBank()">+ Rekening</button>
+      </div>
+      <div style="padding:16px">
+        <p style="font-size:.74rem;color:#64748B;margin-bottom:12px">Totale saldo van al uw rekeningen op 1 juli 2026 — het startpunt van de prognose.</p>
+        <div class="bank-grid">${bankRows}</div>
+        <div class="bank-total"><span>Totaal beginsaldo</span><span id="bank-total">${fmt(initBal())}</span></div>
+      </div>
+    </div>
+    <p class="tip no-print">💡 Tik op een cel om een bedrag in te vullen. Gebruik de <strong>🧾</strong> knop om meerdere bonnen per cel toe te voegen. Gebruik <strong>🔁</strong> om een terugkerend bedrag in te stellen. Tik op de gekleurde stip om een kleur te wijzigen.</p>`;
+}
+
+// ================================================
+// ITEM ROW (with sub-entries button + recurring badge)
+// ================================================
+function itemRow(item, type, catId, color){
+  // Recurring badge
+  const rBadge = item.recur && item.recur.on
+    ? `<span class="recur-badge" onclick="openRecurModal('${item.id}','${type}','${catId||''}')" title="Terugkerend bedrag aanpassen">🔁 ${freqLabel(item.recur.freq)}</span>`
+    : `<span class="recur-badge" style="background:#F1F5F9;color:#94A3B8" onclick="openRecurModal('${item.id}','${type}','${catId||''}')" title="Terugkerend bedrag instellen">🔁</span>`;
+
+  const cells = MONTHS.map((_,mi) => {
+    const subs = item.subs && item.subs[mi] ? item.subs[mi] : [];
+    const hasSubs = subs.length > 0;
+    const directVal = parseFloat(item.v[mi]) || 0;
+    const recurApplies = item.recur && item.recur.on && monthMatchesFreq(mi, item.recur.freq);
+    const effectiveVal = getVal(item, mi);
+
+    // Input display value and class
+    let dispVal = '', dispCls = '';
+    if (hasSubs) {
+      dispVal = effectiveVal;
+      dispCls = effectiveVal < 0 ? 'neg' : effectiveVal > 0 ? 'pos' : '';
+    } else if (directVal !== 0) {
+      dispVal = directVal;
+      dispCls = directVal < 0 ? 'neg' : directVal > 0 ? 'pos' : '';
+    } else if (recurApplies) {
+      dispVal = item.recur.value;
+      dispCls = 'recur-val';
+    }
+
+    const subBtnCls = hasSubs ? 'cell-sub-btn has-subs' : 'cell-sub-btn';
+    const subBtnTitle = hasSubs ? `${subs.length} bon(nen) — klik om te bekijken` : 'Bon toevoegen';
+    const subBtnIcon = hasSubs ? `🧾` : `+`;
+
+    return `<td class="col-mo cell-td">
+      <div class="cell-inner">
+        <input type="number" class="cell-inp ${dispCls}"
+          value="${dispVal !== '' && dispVal !== 0 ? dispVal : ''}"
+          placeholder="${(!hasSubs && !directVal && recurApplies) ? item.recur.value : ''}"
+          ${hasSubs ? 'readonly' : ''}
+          step="any"
+          onchange="updVal('${item.id}','${type}','${catId||''}',${mi},this.value)"
+          oninput="if(!this.readOnly){const n=parseFloat(this.value)||0;this.className='cell-inp '+(n<0?'neg':n>0?'pos':'')}">
+        <button class="${subBtnCls}" title="${subBtnTitle}"
+          onclick="openSubsPanel('${item.id}','${type}','${catId||''}',${mi},event)">${subBtnIcon}</button>
+      </div>
+    </td>`;
+  }).join('');
+
+  const del = `<button class="btn-del no-print" onclick="delItem('${item.id}','${type}','${catId||''}')">✕</button>`;
+  return `<tr class="tr-item" data-id="${item.id}">
+    <td class="col-lbl">
+      <span class="cdot" style="background:${color}"></span>
+      <input class="item-name-inp" type="text" value="${esc(item.name)}"
+        onchange="updName('${item.id}','${type}','${catId||''}',this.value)">
+      ${rBadge}
+      ${del}
+    </td>${cells}
+  </tr>`;
+}
+
+function freqLabel(f){ return f==='monthly'?'M':f==='quarterly'?'Q':'J'; }
+
+// ================================================
+// SUB-ENTRIES PANEL
+// ================================================
+let _sp = {itemId:null,type:null,catId:null,mi:null};
+
+function openSubsPanel(itemId, type, catId, mi, event){
+  event.stopPropagation();
+  _sp = {itemId, type, catId, mi};
+  const item = findItemFull(itemId, type, catId);
+  if (!item) return;
+  if (!item.subs) item.subs = newSubs();
+  if (!item.subs[mi]) item.subs[mi] = [];
+
+  document.getElementById('sp-title').textContent = `${item.name} — ${MONTHS[mi].l}`;
+  document.getElementById('sp-date').value = new Date().toISOString().slice(0,10);
+  document.getElementById('sp-desc').value = '';
+  document.getElementById('sp-amount').value = '';
+
+  renderSubsList(item.subs[mi]);
+
+  const panel = document.getElementById('subs-panel');
+  const backdrop = document.getElementById('subs-backdrop');
+  const isMobile = window.innerWidth < 640;
+
+  if (isMobile) {
+    panel.style.cssText = 'display:block;position:fixed;bottom:0;left:0;right:0;top:auto;z-index:500;border-radius:20px 20px 0 0;max-height:80vh;overflow-y:auto';
+  } else {
+    const btn = event.currentTarget || event.target;
+    const rect = btn.getBoundingClientRect();
+    const pw = 340, ph = 400;
+    let x = rect.left - pw + rect.width;
+    let y = rect.bottom + 6;
+    if (x < 8) x = 8;
+    if (y + ph > window.innerHeight - 8) y = rect.top - ph - 6;
+    panel.style.cssText = `display:block;position:fixed;left:${x}px;top:${y}px;width:${pw}px;max-height:${ph}px;overflow-y:auto;z-index:500;border-radius:14px`;
+  }
+  backdrop.style.display = 'block';
+  setTimeout(()=>document.getElementById('sp-amount').focus(), 100);
+}
+
+function closeSubsPanel(){
+  document.getElementById('subs-panel').style.display = 'none';
+  document.getElementById('subs-backdrop').style.display = 'none';
+  updateCalc();
+  saveToStorage();
+}
+
+function renderSubsList(subs){
+  const list = document.getElementById('sp-list');
+  if (!subs || subs.length === 0) {
+    list.innerHTML = `<div class="sp-empty">Nog geen bonnen. Voeg hieronder uw eerste bedrag toe.</div>`;
+    document.getElementById('sp-total').textContent = '—';
+    return;
+  }
+  const total = subs.reduce((s,e)=>s+(parseFloat(e.amount)||0),0);
+  list.innerHTML = subs.map(e => {
+    const amt = parseFloat(e.amount)||0;
+    const amtCls = amt < 0 ? 'neg' : amt > 0 ? 'pos' : '';
+    return `<div class="sp-entry">
+      <span class="sp-entry-date">${e.date||''}</span>
+      <span class="sp-entry-desc">${esc(e.desc||'—')}</span>
+      <span class="sp-entry-amount ${amtCls}">${fmt(amt)}</span>
+      <button class="sp-del" onclick="delSubEntry('${e.id}')">✕</button>
+    </div>`;
+  }).join('');
+  const totEl = document.getElementById('sp-total');
+  totEl.textContent = fmt(total);
+  totEl.className = 'sp-total ' + (total<0?'neg-text':total>0?'pos-text':'');
+}
+
+function addSubEntry(){
+  const date = document.getElementById('sp-date').value;
+  const desc = document.getElementById('sp-desc').value.trim();
+  const amount = document.getElementById('sp-amount').value;
+  if (!amount || amount === '') return;
+
+  const item = findItemFull(_sp.itemId, _sp.type, _sp.catId);
+  if (!item) return;
+  if (!item.subs) item.subs = newSubs();
+  if (!item.subs[_sp.mi]) item.subs[_sp.mi] = [];
+
+  item.subs[_sp.mi].push({id:uid(), date, desc, amount:parseFloat(amount)||0});
+  item.v[_sp.mi] = 0; // direct value yields to subs
+
+  document.getElementById('sp-desc').value = '';
+  document.getElementById('sp-amount').value = '';
+  document.getElementById('sp-amount').focus();
+
+  renderSubsList(item.subs[_sp.mi]);
+  updateCalcFast(_sp.itemId, _sp.type, _sp.catId, _sp.mi);
+}
+
+function delSubEntry(entryId){
+  const item = findItemFull(_sp.itemId, _sp.type, _sp.catId);
+  if (!item || !item.subs || !item.subs[_sp.mi]) return;
+  item.subs[_sp.mi] = item.subs[_sp.mi].filter(e=>e.id!==entryId);
+  renderSubsList(item.subs[_sp.mi]);
+  updateCalcFast(_sp.itemId, _sp.type, _sp.catId, _sp.mi);
+}
+
+// Press Enter in amount field to add
+document.getElementById('sp-amount').addEventListener('keydown', e => {
+  if (e.key === 'Enter') addSubEntry();
+});
+
+// ================================================
+// FAST CELL UPDATE (after sub-entry change)
+// ================================================
+function updateCalcFast(itemId, type, catId, mi) {
+  const item = findItemFull(itemId, type, catId);
+  if (!item) return;
+  const v = getVal(item, mi);
+  // Update the cell input in the table
+  const tr = document.querySelector(`[data-id="${itemId}"]`);
+  if (tr) {
+    const tds = tr.querySelectorAll('.cell-td');
+    if (tds[mi]) {
+      const inp = tds[mi].querySelector('.cell-inp');
+      const btn = tds[mi].querySelector('.cell-sub-btn');
+      const subs = item.subs && item.subs[mi] ? item.subs[mi] : [];
+      if (inp) {
+        inp.value = v !== 0 ? v : '';
+        inp.className = 'cell-inp ' + (v<0?'neg':v>0?'pos':'');
+        inp.readOnly = subs.length > 0;
+      }
+      if (btn) {
+        btn.className = subs.length > 0 ? 'cell-sub-btn has-subs' : 'cell-sub-btn';
+        btn.textContent = subs.length > 0 ? '🧾' : '+';
+        btn.title = subs.length > 0 ? `${subs.length} bon(nen) — klik om te bekijken` : 'Bon toevoegen';
+      }
+    }
+  }
+  updateCalc();
+}
+
+// ================================================
+// UPDATE SUMMARY ROWS
+// ================================================
+function updateCalc(){
+  MONTHS.forEach((_,mi)=>{
+    const m=mutaties(mi),s=saldo(mi),l=liquiditeit(mi);
+    const me=document.getElementById('m'+mi);
+    const se=document.getElementById('s'+mi);
+    const le=document.getElementById('l'+mi);
+    if(me){me.textContent=fmt(m);me.className=`col-mo num ${m<0?'neg-text':m>0?'pos-text':''}`;}
+    if(se) se.textContent=fmt(s);
+    if(le){le.textContent=fmt(l);le.className=`col-mo num ${l>=0?'liq-pos':'liq-neg'}`;}
+  });
+  const bt=document.getElementById('bank-total');
+  if(bt) bt.textContent=fmt(initBal());
+}
+
+// ================================================
+// STATE MUTATIONS
+// ================================================
+function findItemFull(id, type, catId){
+  if(type==='inc') return S.income.find(x=>x.id===id);
+  const c=S.cats.find(x=>x.id===catId);
+  return c?c.items.find(x=>x.id===id):null;
+}
+function updVal(id,type,catId,mi,val){
+  const it=findItemFull(id,type,catId);
+  if(it){ it.v[mi]=val===''?0:parseFloat(val)||0; updateCalc(); saveToStorage(); }
+}
+function updName(id,type,catId,val){
+  const it=findItemFull(id,type,catId);
+  if(it){ it.name=val; saveToStorage(); }
+}
+function updBank(id,val){
+  const a=S.bank.find(x=>x.id===id);
+  if(a){ a.val=parseFloat(val)||0; updateCalc(); saveToStorage(); }
+}
+function addIncome(){ S.income.push({id:uid(),name:'Nieuwe inkomst',v:zeros(),subs:newSubs(),recur:mkRecur()}); renderPrognose(); saveToStorage(); }
+function addItem(catId){ const c=S.cats.find(x=>x.id===catId); if(c){ c.items.push({id:uid(),name:'Nieuwe post',v:zeros(),subs:newSubs(),recur:mkRecur()}); renderPrognose(); saveToStorage(); } }
+function addBank(){ S.bank.push({id:uid(),name:'Nieuwe rekening',val:0}); renderPrognose(); saveToStorage(); }
+function delItem(id,type,catId){
+  if(type==='inc') S.income=S.income.filter(x=>x.id!==id);
+  else{ const c=S.cats.find(x=>x.id===catId); if(c) c.items=c.items.filter(x=>x.id!==id); }
+  renderPrognose(); saveToStorage();
+}
+function delCat(catId){
+  if(!confirm('Weet u zeker dat u deze categorie wilt verwijderen?')) return;
+  S.cats=S.cats.filter(x=>x.id!==catId); renderPrognose(); saveToStorage();
+}
+function delBank(id){ S.bank=S.bank.filter(x=>x.id!==id); renderPrognose(); saveToStorage(); }
+
+// ================================================
+// RECURRING MODAL
+// ================================================
+function openRecurModal(itemId, type, catId){
+  const item = findItemFull(itemId, type, catId);
+  if (!item) return;
+  const r = item.recur || mkRecur();
+  document.getElementById('modal-title').textContent = `Terugkerend bedrag — ${item.name}`;
+  document.getElementById('modal-body').innerHTML = `
+    <div class="recur-toggle-row">
+      <span class="recur-toggle-label">Terugkerend bedrag actief</span>
+      <label class="toggle-switch">
+        <input type="checkbox" id="recur-on" ${r.on?'checked':''}>
+        <span class="toggle-slider"></span>
+      </label>
+    </div>
+    <label>Frequentie</label>
+    <select id="recur-freq">
+      <option value="monthly" ${r.freq==='monthly'?'selected':''}>Maandelijks (elke maand)</option>
+      <option value="quarterly" ${r.freq==='quarterly'?'selected':''}>Per kwartaal (jul, okt, jan, apr…)</option>
+      <option value="yearly" ${r.freq==='yearly'?'selected':''}>Jaarlijks (jul '26 en jul '27)</option>
+    </select>
+    <label>Standaard bedrag</label>
+    <input type="number" id="recur-val" value="${r.value||''}" placeholder="bijv. -500 of 5000" step="any">
+    <p class="recur-info">💡 Dit bedrag wordt gebruikt als standaard voor lege cellen. Werkelijke bonnen (🧾) en handmatig ingevoerde bedragen overschrijven dit altijd.</p>`;
+  document.getElementById('modal-color-section') && (document.getElementById('modal-color-section').style.display='none');
+  document.getElementById('modal-confirm-btn').textContent = 'Opslaan';
+  document.getElementById('modal-bg').style.display = 'flex';
+  _modalConfirm = () => {
+    item.recur = {
+      on: document.getElementById('recur-on').checked,
+      freq: document.getElementById('recur-freq').value,
+      value: parseFloat(document.getElementById('recur-val').value) || 0,
+    };
+    closeModal(); renderPrognose(); saveToStorage();
+  };
+}
+
+// ================================================
+// RENDER: GRAFIEKEN
+// ================================================
+let charts={};
+function renderGrafieken(){
+  document.getElementById('tab-grafieken').innerHTML=`
+    <div class="charts-grid">
+      <div class="chart-card chart-card-wide"><div class="chart-title">📈 Liquiditeitsverloop over 14 maanden</div><div class="chart-wrap chart-wrap-lg"><canvas id="ch-liq"></canvas></div></div>
+      <div class="chart-card"><div class="chart-title">💸 Inkomsten vs. Uitgaven per maand</div><div class="chart-wrap"><canvas id="ch-ie"></canvas></div></div>
+      <div class="chart-card"><div class="chart-title">🗂 Verdeling uitgaven per categorie (totaal)</div><div class="chart-wrap"><canvas id="ch-pie"></canvas></div></div>
+      <div class="chart-card chart-card-wide"><div class="chart-title">📊 Uitgaven per categorie per maand</div><div class="chart-wrap chart-wrap-lg"><canvas id="ch-bar"></canvas></div></div>
+    </div>`;
+  initCharts();
+}
+function destroyCharts(){ Object.values(charts).forEach(c=>{try{c.destroy()}catch(e){}}); charts={}; }
+function initCharts(){
+  destroyCharts();
+  const labels=MONTHS.map(m=>m.l), gc='#F1F5F9', tip={callbacks:{label:ctx=>` ${fmt(ctx.raw)}`}};
+  const c1=document.getElementById('ch-liq'); if(!c1) return;
+  charts.liq=new Chart(c1.getContext('2d'),{type:'line',data:{labels,datasets:[{label:'Liquiditeit',data:MONTHS.map((_,mi)=>liquiditeit(mi)),borderColor:'#2563EB',backgroundColor:'rgba(37,99,235,.08)',fill:true,tension:.35,pointRadius:4,pointBackgroundColor:'#2563EB',pointBorderColor:'#fff',pointBorderWidth:2}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:tip},scales:{y:{ticks:{callback:v=>fmt(v),font:{size:10}},grid:{color:gc}},x:{ticks:{font:{size:10}},grid:{display:false}}}}});
+  const incData=MONTHS.map((_,mi)=>{let t=0;S.income.forEach(it=>t+=getVal(it,mi));return t;});
+  const expData=MONTHS.map((_,mi)=>{let t=0;S.cats.forEach(c=>c.items.forEach(it=>t+=Math.abs(getVal(it,mi))));return t;});
+  charts.ie=new Chart(document.getElementById('ch-ie').getContext('2d'),{type:'bar',data:{labels,datasets:[{label:'Inkomsten',data:incData,backgroundColor:'#10B981',borderRadius:4},{label:'Uitgaven',data:expData,backgroundColor:'#EF4444',borderRadius:4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'top',labels:{font:{size:10},boxWidth:10}},tooltip:tip},scales:{y:{ticks:{callback:v=>fmt(v),font:{size:10}},grid:{color:gc}},x:{ticks:{font:{size:10}},grid:{display:false}}}}});
+  const catT=S.cats.map(c=>{let t=0;c.items.forEach(it=>MONTHS.forEach((_,mi)=>t+=Math.abs(getVal(it,mi))));return{name:c.name,val:t,color:c.color};}).filter(c=>c.val>0);
+  charts.pie=new Chart(document.getElementById('ch-pie').getContext('2d'),{type:'doughnut',data:{labels:catT.map(c=>c.name),datasets:[{data:catT.map(c=>c.val),backgroundColor:catT.map(c=>c.color),borderWidth:3,borderColor:'#fff',hoverOffset:8}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'right',labels:{font:{size:10},boxWidth:10}},tooltip:{callbacks:{label:ctx=>` ${ctx.label}: ${fmt(ctx.raw)}`}}}}});
+  charts.bar=new Chart(document.getElementById('ch-bar').getContext('2d'),{type:'bar',data:{labels,datasets:S.cats.map(c=>({label:c.name,data:MONTHS.map((_,mi)=>{let t=0;c.items.forEach(it=>t+=Math.abs(getVal(it,mi)));return t;}),backgroundColor:c.color,borderRadius:2}))},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'top',labels:{font:{size:10},boxWidth:10}},tooltip:{callbacks:{label:ctx=>` ${ctx.dataset.label}: ${fmt(ctx.raw)}`}}},scales:{x:{stacked:true,ticks:{font:{size:10}},grid:{display:false}},y:{stacked:true,ticks:{callback:v=>fmt(v),font:{size:10}},grid:{color:gc}}}}});
+}
+
+// ================================================
+// RENDER: BELEGGINGEN (with notes column)
+// ================================================
+let invCharts={};
+function renderBeleggingen(){
+  const mo_th = MONTHS.map(m=>`<th class="col-mo">${m.l}</th>`).join('');
+  const empties = MONTHS.map(()=>'<td class="col-mo"></td>').join('');
+  const types = S.inv.types;
+
+  const typeSections = types.map(t=>{
+    const itemRows = t.items.map(it=>{
+      const cells = MONTHS.map((_,mi)=>{
+        const v = it.v[mi];
+        return `<td class="col-mo col-mo-inp" style="padding:0"><div class="cell-inner"><input type="number" class="cell-inp ${inputCls(v)}" value="${v||''}" placeholder="" step="any" onchange="updInvVal('${it.id}','${t.id}',${mi},this.value)" oninput="const n=parseFloat(this.value)||0;this.className='cell-inp '+(n<0?'neg':n>0?'pos':'')"></div></td>`;
+      }).join('');
+      return `<tr class="tr-item" data-id="${it.id}">
+        <td class="col-lbl">
+          <span class="cdot" style="background:${t.color}"></span>
+          <input class="item-name-inp" type="text" value="${esc(it.name)}" onchange="updInvName('${it.id}','${t.id}',this.value)">
+          <button class="btn-del no-print" onclick="delInvItem('${it.id}','${t.id}')">✕</button>
+        </td>
+        <td class="col-note">
+          <input class="inv-note-inp" type="text" value="${esc(it.note||'')}" placeholder="Aantekening…" onchange="updInvNote('${it.id}','${t.id}',this.value)">
+        </td>
+        ${cells}
+      </tr>`;
+    }).join('');
+    const subtotals = MONTHS.map((_,mi)=>{ const v=invTypeTotal(t,mi); return `<td class="col-mo num ${v<0?'neg-text':v>0?'pos-text':''}" id="it-${t.id}-${mi}">${fmt(v)}</td>`; }).join('');
+    return `
+      <tr class="tr-sec" style="background:${t.color}">
+        <td class="col-lbl" style="background:${t.color};display:flex;align-items:center;justify-content:space-between;gap:6px">
+          <span style="display:flex;align-items:center;gap:8px">
+            <span class="cdot-lg" style="background:${t.color};border-color:rgba(255,255,255,.7)" onclick="editColor('inv','${t.id}')" title="Kleur aanpassen"></span>
+            <span style="font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:#fff">${esc(t.name)}</span>
+          </span>
+          <span style="display:flex;gap:5px;align-items:center;flex-shrink:0">
+            <button class="btn-cat-add no-print" onclick="addInvItem('${t.id}')">+ Item</button>
+            <button class="btn-del no-print" style="color:rgba(255,255,255,.6)" onclick="delInvType('${t.id}')">✕</button>
+          </span>
+        </td>
+        <td style="background:${t.color}"></td>
+        ${empties}
+      </tr>
+      ${itemRows}
+      <tr class="tr-subtt">
+        <td class="col-lbl" style="padding-left:22px">Subtotaal ${esc(t.name)}</td>
+        <td></td>${subtotals}
+      </tr>`;
+  }).join('');
+
+  const grandTotals = MONTHS.map((_,mi)=>{ const v=invGrandTotal(mi); return `<td class="col-mo num ${v>=0?'liq-pos':'liq-neg'}" id="ig-${mi}">${fmt(v)}</td>`; }).join('');
+
+  document.getElementById('tab-beleggingen').innerHTML = `
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">Beleggingen &amp; Vermogen — maandelijks overzicht</span>
+        <button class="btn btn-ghost btn-sm no-print" onclick="openAddModal('invtype')">+ Categorie</button>
+      </div>
+      <div class="table-wrap">
+        <table class="ftable">
+          <thead><tr class="tr-head"><th class="col-lbl">Omschrijving</th><th class="col-note" style="text-align:left;padding:10px 8px;font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.5px">Aantekening</th>${mo_th}</tr></thead>
+          <tbody>
+            ${typeSections}
+            <tr class="tr-liq"><td class="col-lbl">💼 Totaal vermogen</td><td></td>${grandTotals}</tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="inv-charts-row">
+      <div class="chart-card"><div class="chart-title">📈 Vermogensontwikkeling per type</div><div class="chart-wrap chart-wrap-lg"><canvas id="inv-line"></canvas></div></div>
+      <div class="chart-card"><div class="chart-title">🥧 Huidige verdeling</div><div class="chart-wrap chart-wrap-lg"><canvas id="inv-pie"></canvas></div></div>
+    </div>
+    <div class="card" style="margin-top:16px">
+      <div class="card-header"><span class="card-title">Rendement overzicht</span></div>
+      <div id="inv-returns" style="padding:16px"></div>
+    </div>`;
+  renderInvCharts(); renderInvReturns();
+}
+
+function renderInvCharts(){
+  Object.values(invCharts).forEach(c=>{try{c.destroy()}catch(e){}});
+  invCharts={};
+  const labels=MONTHS.map(m=>m.l),types=S.inv.types;
+  const c1=document.getElementById('inv-line'); if(!c1) return;
+  invCharts.line=new Chart(c1.getContext('2d'),{type:'line',data:{labels,datasets:types.map(t=>({label:t.name,data:MONTHS.map((_,mi)=>invTypeTotal(t,mi)),borderColor:t.color,backgroundColor:t.color+'22',fill:false,tension:.3,pointRadius:3,pointBackgroundColor:t.color,pointBorderColor:'#fff',pointBorderWidth:2}))},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{font:{size:10},boxWidth:10,padding:10}},tooltip:{callbacks:{label:ctx=>` ${ctx.dataset.label}: ${fmt(ctx.raw)}`}}},scales:{y:{ticks:{callback:v=>fmt(v),font:{size:10}},grid:{color:'#F1F5F9'}},x:{ticks:{font:{size:10}},grid:{display:false}}}}});
+  const latest=types.map(t=>[...MONTHS.map((_,mi)=>invTypeTotal(t,mi))].reverse().find(v=>v>0)||0);
+  invCharts.pie=new Chart(document.getElementById('inv-pie').getContext('2d'),{type:'doughnut',data:{labels:types.map(t=>t.name),datasets:[{data:latest,backgroundColor:types.map(t=>t.color),borderWidth:3,borderColor:'#fff',hoverOffset:8}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{font:{size:10},boxWidth:10}},tooltip:{callbacks:{label:ctx=>`${ctx.label}: ${fmt(ctx.raw)}`}}}}});
+}
+
+function renderInvReturns(){
+  const el=document.getElementById('inv-returns'); if(!el) return;
+  const hdr=`<div style="display:grid;grid-template-columns:1fr auto auto auto;gap:4px;padding:0 0 8px;font-size:.68rem;font-weight:700;color:#94A3B8;text-transform:uppercase;letter-spacing:.5px"><span>Type</span><span style="text-align:right;min-width:70px">Start</span><span style="text-align:right;min-width:70px">Huidig</span><span style="text-align:right;min-width:95px">Rendement</span></div>`;
+  const rows=S.inv.types.map(t=>{
+    const vals=MONTHS.map((_,mi)=>invTypeTotal(t,mi));
+    const first=vals.find(v=>v>0)||0, last=[...vals].reverse().find(v=>v>0)||0;
+    const diff=last-first, pct=first>0?(diff/first*100):0;
+    return `<div style="display:grid;grid-template-columns:1fr auto auto auto;gap:4px;align-items:center;padding:9px 0;border-bottom:1px solid #F1F5F9">
+      <span style="font-size:.8rem;display:flex;align-items:center;gap:7px"><span style="width:10px;height:10px;border-radius:50%;background:${t.color};display:inline-block;flex-shrink:0"></span>${esc(t.name)}</span>
+      <span style="font-size:.78rem;color:#64748B;text-align:right;min-width:70px">${fmt(first)}</span>
+      <span style="font-size:.78rem;color:#374151;text-align:right;min-width:70px">${fmt(last)}</span>
+      <span class="${diff>=0?'pos-text':'neg-text'}" style="font-size:.78rem;font-weight:600;text-align:right;min-width:95px">${diff>=0?'+':''}${fmt(diff)} (${pct.toFixed(1)}%)</span>
+    </div>`;
+  }).join('');
+  el.innerHTML=hdr+rows;
+}
+
+function updInvVal(itemId,typeId,mi,val){
+  const t=S.inv.types.find(x=>x.id===typeId);
+  const it=t?t.items.find(x=>x.id===itemId):null;
+  if(it){
+    it.v[mi]=parseFloat(val)||0;
+    MONTHS.forEach((_,mi2)=>{ const v=invTypeTotal(t,mi2); const el=document.getElementById('it-'+typeId+'-'+mi2); if(el){el.textContent=fmt(v);el.className=`col-mo num ${v<0?'neg-text':v>0?'pos-text':''}`;} });
+    MONTHS.forEach((_,mi2)=>{ const v=invGrandTotal(mi2); const el=document.getElementById('ig-'+mi2); if(el){el.textContent=fmt(v);el.className=`col-mo num ${v>=0?'liq-pos':'liq-neg'}`;} });
+    if(document.getElementById('tab-beleggingen').classList.contains('active')){ renderInvCharts(); renderInvReturns(); }
+    saveToStorage();
+  }
+}
+function updInvName(itemId,typeId,val){ const t=S.inv.types.find(x=>x.id===typeId); const it=t?t.items.find(x=>x.id===itemId):null; if(it){ it.name=val; saveToStorage(); } }
+function updInvNote(itemId,typeId,val){ const t=S.inv.types.find(x=>x.id===typeId); const it=t?t.items.find(x=>x.id===itemId):null; if(it){ it.note=val; saveToStorage(); } }
+function addInvItem(typeId){ const t=S.inv.types.find(x=>x.id===typeId); if(t){ t.items.push({id:uid(),name:'Nieuw item',note:'',v:zeros()}); renderBeleggingen(); saveToStorage(); } }
+function delInvItem(itemId,typeId){ const t=S.inv.types.find(x=>x.id===typeId); if(t){ t.items=t.items.filter(x=>x.id!==itemId); renderBeleggingen(); saveToStorage(); } }
+function delInvType(typeId){
+  if(!confirm('Weet u zeker dat u dit type wilt verwijderen?')) return;
+  S.inv.types=S.inv.types.filter(x=>x.id!==typeId); renderBeleggingen(); saveToStorage();
+}
+
+// ================================================
+// MODAL (generic: add cat, add invtype, edit color)
+// ================================================
+let _selColor=COLORS[0], _modalConfirm=null;
+
+function buildColorPicker(cur){ document.getElementById('modal-colors').innerHTML=COLORS.map(c=>`<span class="col-opt ${c===cur?'sel':''}" style="background:${c}" onclick="pickColor('${c}',this)"></span>`).join(''); _selColor=cur; }
+
+function openAddModal(kind){
+  _selColor=COLORS[Math.floor(Math.random()*COLORS.length)];
+  const isCat=kind==='cat';
+  document.getElementById('modal-title').textContent=isCat?'Nieuwe categorie toevoegen':'Nieuw beleggingstype toevoegen';
+  document.getElementById('modal-confirm-btn').textContent='Toevoegen';
+  document.getElementById('modal-body').innerHTML=`
+    <label id="modal-name-label">Naam</label>
+    <input type="text" id="modal-name" placeholder="${isCat?'bijv. Auto, Hobby…':'bijv. Obligaties, Goud…'}">
+    <label>Kleur</label>
+    <div class="color-row" id="modal-colors"></div>`;
+  buildColorPicker(_selColor);
+  document.getElementById('modal-bg').style.display='flex';
+  setTimeout(()=>document.getElementById('modal-name').focus(),100);
+  _modalConfirm=()=>{
+    const name=document.getElementById('modal-name').value.trim();
+    if(!name){ document.getElementById('modal-name').focus(); return; }
+    if(isCat){ S.cats.push({id:uid(),name,color:_selColor,items:[]}); closeModal(); renderPrognose(); }
+    else { S.inv.types.push({id:uid(),name,color:_selColor,items:[{id:uid(),name:'Item 1',note:'',v:zeros()}]}); closeModal(); renderBeleggingen(); }
+    saveToStorage();
+  };
+}
+
+function editColor(ctx,id){
+  const obj=ctx==='cat'?S.cats.find(x=>x.id===id):S.inv.types.find(x=>x.id===id);
+  if(!obj) return;
+  document.getElementById('modal-title').textContent='Naam &amp; kleur aanpassen';
+  document.getElementById('modal-confirm-btn').textContent='Opslaan';
+  document.getElementById('modal-body').innerHTML=`
+    <label>Naam</label>
+    <input type="text" id="modal-name" value="${esc(obj.name)}">
+    <label>Kleur</label>
+    <div class="color-row" id="modal-colors"></div>`;
+  buildColorPicker(obj.color);
+  document.getElementById('modal-bg').style.display='flex';
+  setTimeout(()=>document.getElementById('modal-name').focus(),100);
+  _modalConfirm=()=>{
+    const name=document.getElementById('modal-name').value.trim();
+    if(name) obj.name=name;
+    obj.color=_selColor;
+    closeModal();
+    if(ctx==='cat') renderPrognose(); else renderBeleggingen();
+    saveToStorage();
+  };
+}
+
+function pickColor(c,el){ _selColor=c; document.querySelectorAll('.col-opt').forEach(e=>e.classList.remove('sel')); el.classList.add('sel'); }
+function closeModal(){ document.getElementById('modal-bg').style.display='none'; }
+function confirmModal(){ if(_modalConfirm) _modalConfirm(); }
+function handleModalBg(e){ if(e.target===document.getElementById('modal-bg')) closeModal(); }
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape'){ closeModal(); closeSubsPanel(); }
+  if(e.key==='Enter'&&document.getElementById('modal-bg').style.display==='flex') confirmModal();
+});
+
+// ================================================
+// TABS
+// ================================================
+function showTab(tab,btn){
+  document.querySelectorAll('.tab-content').forEach(el=>el.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(el=>el.classList.remove('active'));
+  document.getElementById('tab-'+tab).classList.add('active');
+  if(btn) btn.classList.add('active');
+  if(tab==='grafieken') renderGrafieken();
+  if(tab==='beleggingen') renderBeleggingen();
+}
+
+// ================================================
+// EXPORT / IMPORT
+// ================================================
+function exportData(){
+  const json=JSON.stringify(S,null,2);
+  const blob=new Blob([json],{type:'application/json'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url;
+  a.download='zeko-finapp-'+new Date().toISOString().slice(0,10)+'.json';
+  document.body.appendChild(a); a.click();
+  document.body.removeChild(a); URL.revokeObjectURL(url);
+  showToast('📁 Bestand opgeslagen');
+}
+function importFile(event){
+  const file=event.target.files[0]; if(!file) return;
+  const reader=new FileReader();
+  reader.onload=e=>{
+    try{ S=migrate(JSON.parse(e.target.result)); saveToStorage(); renderPrognose(); showTab('prognose',document.querySelector('.tab-btn')); showToast('✅ Gegevens geladen'); }
+    catch(err){ alert('Fout bij laden: '+err.message); }
+  };
+  reader.readAsText(file); event.target.value='';
+}
+
+// ================================================
+// AUTO-SAVE
+// ================================================
+const STORAGE_KEY='zeko-finapp-v2';
+function saveToStorage(){ try{ localStorage.setItem(STORAGE_KEY,JSON.stringify(S)); }catch(e){} }
+function loadFromStorage(){ try{ const r=localStorage.getItem(STORAGE_KEY); if(r){ S=migrate(JSON.parse(r)); return true; } }catch(e){} return false; }
+
+function showToast(msg){
+  let t=document.getElementById('toast');
+  if(!t){ t=document.createElement('div'); t.id='toast'; t.style.cssText='position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#1E3A5F;color:#fff;padding:8px 18px;border-radius:20px;font-size:.78rem;font-weight:600;z-index:9999;opacity:0;transition:opacity .3s;pointer-events:none;white-space:nowrap'; document.body.appendChild(t); }
+  t.textContent=msg; t.style.opacity='1';
+  clearTimeout(t._t); t._t=setTimeout(()=>{ t.style.opacity='0'; },2200);
+}
+
+// ================================================
+// PASSWORD PROTECTION
+// ================================================
+const PW_KEY = 'zeko-pw-hash-v1';
+const SESSION_KEY = 'zeko-session';
+
+async function sha256(str){
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+  return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
+}
+
+function isFirstRun(){ return !localStorage.getItem(PW_KEY); }
+
+function initLoginScreen(){
+  const first = isFirstRun();
+  if(first){
+    document.getElementById('login-sub-text').textContent = 'Stel een wachtwoord in om uw gegevens te beveiligen';
+    document.getElementById('pw-label-1').textContent = 'Kies een wachtwoord';
+    document.getElementById('login-confirm-wrap').style.display = 'block';
+    document.getElementById('login-btn').textContent = 'Wachtwoord instellen';
+  }
+  document.getElementById('login-pw').addEventListener('keydown', e => { if(e.key==='Enter') loginAction(); });
+  document.getElementById('login-pw2').addEventListener('keydown', e => { if(e.key==='Enter') loginAction(); });
+}
+
+async function loginAction(){
+  const pw = document.getElementById('login-pw').value;
+  const err = document.getElementById('login-error');
+  if(!pw){ err.textContent='Voer een wachtwoord in.'; return; }
+
+  if(isFirstRun()){
+    const pw2 = document.getElementById('login-pw2').value;
+    if(pw.length < 4){ err.textContent='Minimaal 4 tekens vereist.'; return; }
+    if(pw !== pw2){ err.textContent='Wachtwoorden komen niet overeen.'; return; }
+    const hash = await sha256(pw);
+    localStorage.setItem(PW_KEY, hash);
+    unlockApp();
+  } else {
+    const hash = await sha256(pw);
+    if(hash === localStorage.getItem(PW_KEY)){
+      unlockApp();
+    } else {
+      err.textContent = 'Onjuist wachtwoord. Probeer opnieuw.';
+      document.getElementById('login-pw').value = '';
+      document.getElementById('login-pw').focus();
+    }
+  }
+}
+
+function unlockApp(){
+  sessionStorage.setItem(SESSION_KEY,'1');
+  document.getElementById('login-overlay').classList.add('hidden');
+}
+
+function toggleEye(inputId, btn){
+  const inp = document.getElementById(inputId);
+  if(inp.type==='password'){ inp.type='text'; btn.textContent='🙈'; }
+  else { inp.type='password'; btn.textContent='👁'; }
+}
+
+function openPwModal(){
+  document.getElementById('pw-old').value='';
+  document.getElementById('pw-new1').value='';
+  document.getElementById('pw-new2').value='';
+  document.getElementById('pw-modal-err').textContent='';
+  document.getElementById('pw-modal-overlay').classList.remove('hidden');
+  setTimeout(()=>document.getElementById('pw-old').focus(),100);
+}
+function closePwModal(){ document.getElementById('pw-modal-overlay').classList.add('hidden'); }
+
+async function changePwAction(){
+  const old = document.getElementById('pw-old').value;
+  const n1  = document.getElementById('pw-new1').value;
+  const n2  = document.getElementById('pw-new2').value;
+  const err = document.getElementById('pw-modal-err');
+
+  const oldHash = await sha256(old);
+  if(oldHash !== localStorage.getItem(PW_KEY)){ err.textContent='Huidig wachtwoord is onjuist.'; return; }
+  if(n1.length < 4){ err.textContent='Nieuw wachtwoord: minimaal 4 tekens.'; return; }
+  if(n1 !== n2){ err.textContent='Nieuwe wachtwoorden komen niet overeen.'; return; }
+
+  const newHash = await sha256(n1);
+  localStorage.setItem(PW_KEY, newHash);
+  closePwModal();
+  showToast('🔒 Wachtwoord gewijzigd');
+}
+
+// ================================================
+// INIT
+// ================================================
+initLoginScreen();
+// Check if already authenticated this session
+if(sessionStorage.getItem(SESSION_KEY) === '1'){
+  document.getElementById('login-overlay').classList.add('hidden');
+}
+document.getElementById('login-pw').focus();
+
+const hadData=loadFromStorage();
+renderPrognose();
+if(hadData) showToast('✅ Gegevens hersteld');
+</script>
+</body>
+</html>

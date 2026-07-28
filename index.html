@@ -378,6 +378,12 @@ const COLORS = [
   '#EC4899','#06B6D4','#84CC16','#F59E0B','#6366F1',
   '#14B8A6','#F43F5E','#A855F7','#22C55E','#0EA5E9',
   '#D97706','#7C3AED','#059669','#DC2626','#2563EB',
+  /* Browns / earthy */
+  '#78350F','#92400E','#B45309','#A16207','#854D0E',
+  '#6B4F3A','#7C5C3E','#5C4033','#8B6914','#A0522D',
+  /* Grays */
+  '#374151','#4B5563','#6B7280','#9CA3AF','#64748B',
+  '#475569','#334155','#71717A','#52525B','#3F3F46',
 ];
 
 let _id = 300;
@@ -433,6 +439,7 @@ let S = {
       {id:'e17',name:'Aflossing lening',v:zeros(),subs:newSubs(),recur:mkRecur()},
     ]},
   ],
+  incomeColor:'#059669',
   inv:{
     types:[
       {id:'inv1',name:"Aandelen / ETF's",color:'#3B82F6',items:[{id:'ia1',name:'Voorbeeld: VWCE',note:'',v:zeros()}]},
@@ -453,6 +460,7 @@ function migrate(state) {
     it.subs = it.subs.map(s => (Array.isArray(s) ? s : []));
     if (!it.recur || typeof it.recur !== 'object') it.recur = mkRecur();
   };
+  if(!state.incomeColor) state.incomeColor='#059669';
   (state.income || []).forEach(ensureItem);
   (state.cats || []).forEach(c => (c.items || []).forEach(ensureItem));
   (state.inv?.types || []).forEach(t => (t.items || []).forEach(it => {
@@ -559,9 +567,12 @@ function renderPrognose(){
         <table class="ftable">
           <thead><tr class="tr-head"><th class="col-lbl">Omschrijving</th>${mo_th}</tr></thead>
           <tbody>
-            <tr class="tr-sec" style="background:#059669">
-              <td class="col-lbl" style="background:#059669;display:flex;align-items:center;justify-content:space-between;padding:0 8px 0 14px">
-                <span style="font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:#fff">Inkomsten</span>
+            <tr class="tr-sec" style="background:${S.incomeColor}">
+              <td class="col-lbl" style="background:${S.incomeColor};display:flex;align-items:center;justify-content:space-between;gap:6px">
+                <span style="display:flex;align-items:center;gap:8px">
+                  <span class="cdot-lg" style="background:${S.incomeColor};border-color:rgba(255,255,255,.7)" onclick="editColor('income',null)" title="Kleur aanpassen"></span>
+                  <span style="font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:#fff">Inkomsten</span>
+                </span>
                 <button class="btn-cat-add no-print" onclick="addIncome()">+ Item</button>
               </td>${empties}
             </tr>
@@ -1057,6 +1068,15 @@ function openAddModal(kind){
 }
 
 function editColor(ctx,id){
+  if(ctx==='income'){
+    document.getElementById('modal-title').textContent='Kleur Inkomsten aanpassen';
+    document.getElementById('modal-confirm-btn').textContent='Opslaan';
+    document.getElementById('modal-body').innerHTML=`<label>Kleur</label><div class="color-row" id="modal-colors"></div>`;
+    buildColorPicker(S.incomeColor);
+    document.getElementById('modal-bg').style.display='flex';
+    _modalConfirm=()=>{ S.incomeColor=_selColor; closeModal(); renderPrognose(); saveToStorage(); };
+    return;
+  }
   const obj=ctx==='cat'?S.cats.find(x=>x.id===id):S.inv.types.find(x=>x.id===id);
   if(!obj) return;
   document.getElementById('modal-title').textContent='Naam &amp; kleur aanpassen';

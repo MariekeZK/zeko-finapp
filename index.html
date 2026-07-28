@@ -80,7 +80,7 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
 .tr-head .col-lbl{background:#1E3A5F;z-index:20;top:0}
 
 /* Section header */
-.tr-sec .col-lbl{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:#fff;display:flex;align-items:center;gap:6px}
+.tr-sec .col-lbl{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:#fff;display:flex;align-items:center;gap:6px;padding:0 8px 0 14px}
 
 /* Item rows */
 .tr-item td{border-bottom:1px solid #F8FAFC}
@@ -306,10 +306,10 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
     <p>Liquiditeitsprognose &amp; Beleggingen</p>
   </div>
   <div class="header-actions">
-    <span id="sync-dot" class="sync-dot no-print" title="Synchronisatiestatus">☁️</span>
-    <button class="btn btn-outline" onclick="exportData()">💾 Opslaan</button>
+    <span id="sync-dot" class="sync-dot no-print" title="Cloudstatus: gesynchroniseerd">✅</span>
+    <button class="btn btn-outline" onclick="exportData()">💾 Exporteren</button>
     <input type="file" id="importFile" accept=".json" style="display:none" onchange="importFile(event)">
-    <button class="btn btn-outline" onclick="document.getElementById('importFile').click()">📂 Laden</button>
+    <button class="btn btn-outline" onclick="document.getElementById('importFile').click()">📂 Importeren</button>
     <button class="btn btn-outline no-print" onclick="window.print()">🖨</button>
     <button class="btn btn-outline no-print" onclick="doLogout()" title="Uitloggen">🚪</button>
   </div>
@@ -560,7 +560,7 @@ function renderPrognose(){
           <thead><tr class="tr-head"><th class="col-lbl">Omschrijving</th>${mo_th}</tr></thead>
           <tbody>
             <tr class="tr-sec" style="background:#059669">
-              <td class="col-lbl" style="background:#059669;display:flex;align-items:center;justify-content:space-between">
+              <td class="col-lbl" style="background:#059669;display:flex;align-items:center;justify-content:space-between;padding:0 8px 0 14px">
                 <span style="font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:#fff">Inkomsten</span>
                 <button class="btn-cat-add no-print" onclick="addIncome()">+ Item</button>
               </td>${empties}
@@ -1166,8 +1166,9 @@ async function doLogin(){
 }
 
 async function doLogout(){
-  if(!confirm('Wil je uitloggen?')) return;
-  await _sb.auth.signOut();
+  try{
+    await _sb.auth.signOut();
+  } catch(e){}
   document.getElementById('login-screen').classList.remove('hidden');
   document.getElementById('login-btn').textContent='Inloggen';
   document.getElementById('login-btn').disabled=false;

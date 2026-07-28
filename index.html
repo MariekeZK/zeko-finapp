@@ -1,84 +1,32 @@
 <!DOCTYPE html>
-<script type="application/json" id="cowork-artifact-meta">
-{
-  "name": "Financieel Dashboard",
-  "schemaVersion": 1,
-  "description": "Liquiditeitsprognose & Beleggingen dashboard — 14 maanden prognose met categoriebeheer, grafieken en beleggingstracking per kwartaal.",
-  "mcpTools": [],
-  "mcpServerNames": []
-}
-</script>
 <html lang="nl">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>ZEKO Finapp</title>
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48ZGVmcz48bGluZWFyR3JhZGllbnQgaWQ9InprLWJnIiB4MT0iMCUiIHkxPSIwJSIgeDI9IjEwMCUiIHkyPSIxMDAlIj48c3RvcCBvZmZzZXQ9IjAlIiBzdG9wLWNvbG9yPSIjMWUyZjU4Ii8+PHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSIjMGQxODMwIi8+PC9saW5lYXJHcmFkaWVudD48cmFkaWFsR3JhZGllbnQgaWQ9InprLWdsb3ciIGN4PSI0MCUiIGN5PSIzNSUiIHI9IjYwJSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzJhM2Y2ZSIgc3RvcC1vcGFjaXR5PSIwLjYiLz48c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiMwZDE4MzAiIHN0b3Atb3BhY2l0eT0iMCIvPjwvcmFkaWFsR3JhZGllbnQ+PGxpbmVhckdyYWRpZW50IGlkPSJ6ay1sdCIgeDE9IjAlIiB5MT0iMCUiIHgyPSIwJSIgeTI9IjEwMCUiPjxzdG9wIG9mZnNldD0iMCUiIHN0b3AtY29sb3I9IiNmNWVkZTAiLz48c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiNkNGMzYTUiLz48L2xpbmVhckdyYWRpZW50PjxjbGlwUGF0aCBpZD0iemstY2xpcCI+PHJlY3Qgd2lkdGg9IjUxMiIgaGVpZ2h0PSI1MTIiIHJ4PSIxMDgiIHJ5PSIxMDgiLz48L2NsaXBQYXRoPjwvZGVmcz48cmVjdCB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgcng9IjEwOCIgcnk9IjEwOCIgZmlsbD0idXJsKCN6ay1iZykiLz48cmVjdCB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgcng9IjEwOCIgcnk9IjEwOCIgZmlsbD0idXJsKCN6ay1nbG93KSIvPjxjaXJjbGUgY3g9IjI1NiIgY3k9IjI1NiIgcj0iMjA0IiBmaWxsPSJub25lIiBzdHJva2U9IiNjOGI4OWEiIHN0cm9rZS13aWR0aD0iMS4yIiBvcGFjaXR5PSIwLjMwIiBjbGlwLXBhdGg9InVybCgjemstY2xpcCkiLz48Y2lyY2xlIGN4PSIyNTYiIGN5PSIyNTYiIHI9IjE4OCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjYzhiODlhIiBzdHJva2Utd2lkdGg9IjAuNyIgb3BhY2l0eT0iMC4xOCIgY2xpcC1wYXRoPSJ1cmwoI3prLWNsaXApIi8+PHJlY3QgeD0iMjUzIiB5PSIxNDIiIHdpZHRoPSIxLjUiIGhlaWdodD0iMjI4IiBmaWxsPSIjYzhiODlhIiBvcGFjaXR5PSIwLjQ1IiByeD0iMSIvPjxyZWN0IHg9IjgyIiB5PSIxNDgiIHdpZHRoPSIxNTIiIGhlaWdodD0iMjYiIHJ4PSI1IiBmaWxsPSJ1cmwoI3prLWx0KSIvPjxwb2x5Z29uIHBvaW50cz0iMjM0LDE3NCA4MiwzMzggODIsMzY0IDEwOCwzNjQgMjM0LDIwMCIgZmlsbD0idXJsKCN6ay1sdCkiLz48cmVjdCB4PSI4MiIgeT0iMzM4IiB3aWR0aD0iMTUyIiBoZWlnaHQ9IjI2IiByeD0iNSIgZmlsbD0idXJsKCN6ay1sdCkiLz48cmVjdCB4PSIyNzgiIHk9IjE0OCIgd2lkdGg9IjI2IiBoZWlnaHQ9IjIxNiIgcng9IjUiIGZpbGw9InVybCgjemstbHQpIi8+PHBvbHlnb24gcG9pbnRzPSIzMDQsMjUwIDQzMCwxNDggNDAwLDE0OCAyNzgsMjM1IDI3OCwyNjUgMzA0LDI2NSIgZmlsbD0idXJsKCN6ay1sdCkiLz48cG9seWdvbiBwb2ludHM9IjMwNCwyNjUgMjc4LDI2NSAyNzgsMjkwIDQwMCwzNjQgNDMwLDM2NCIgZmlsbD0idXJsKCN6ay1sdCkiLz48Y2lyY2xlIGN4PSI5NiIgY3k9Ijk2IiByPSI0IiBmaWxsPSIjYzhiODlhIiBvcGFjaXR5PSIwLjQ1Ii8+PGNpcmNsZSBjeD0iNDE2IiBjeT0iOTYiIHI9IjQiIGZpbGw9IiNjOGI4OWEiIG9wYWNpdHk9IjAuNDUiLz48Y2lyY2xlIGN4PSI5NiIgY3k9IjQxNiIgcj0iNCIgZmlsbD0iI2M4Yjg5YSIgb3BhY2l0eT0iMC40NSIvPjxjaXJjbGUgY3g9IjQxNiIgY3k9IjQxNiIgcj0iNCIgZmlsbD0iI2M4Yjg5YSIgb3BhY2l0eT0iMC40NSIvPjwvc3ZnPg==">
-<link rel="apple-touch-icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAALQAAAC0CAYAAAA9zQYyAAAFCElEQVR4nO3dzVXjQBBF4TJn4mDPanIgCkIhBEIhCnJgxZ5EmAUjsEGS+0/dVa/vtx9LyHeKkjiYkw12+/fhY/Q5oJ331+fTyON3PzgBz6V34F0ORsQw6xP3oQcgZKw5MuxDXpiQkeKIsJu+ICGjRMuwm7wQIaOFFmHf1L4AMaOVFi1VBU3MaK22qaIRT8jooWQFyZ7QxIxeSlrLCpqY0Vtuc8lBEzNGyWkvKWhixmipDVY/tgM8uRo00xlepLS4GzQxw5trTW4GTczwaq9NdmhIWQ2a6QzvthplQkPKr6CZzohirVUmNKRcBM10RjQ/m2VCQ8pX0ExnRHXeLhMaUggaUm7MWDcQ39IwExpSCBpSCBpSTuzPUMKEhhSChhSChhSChhSChhSChhSChhSChhSChhSChhSChhSChhSChhSChhSChhSChhSChhSChhSChpQ/vQ/49vLU+5Dd3N0/Fv271GtS+vot5b5/vc+ZCY1k3mM2GzChEU+EkBdMaOyKFLMZExobSu51RsdsxoTGiqgxmzGhcSZyyAsmNMxMI2YzgobpxGzGyjE1pZAX3YP2fkFKRPzpp2LMZkzoatFiLj3fCDGbsUNXIWZ/mNCFIsU8Q8gLJnQBYvaLoDMRs2+sHBmixDxjyAsmdCJijoEJnSBCzDXnqBKzGRO6mZFREPM3JvQVKbGMioKQf2NC7/C8ahDzOib0Bq+/iV37n0w5ZjOCXqUYs3rIC1aOH7zGXCPSudYi6DPEHB9B/+f5BrDUbDGbsUObWV7MESKJcI5HmX5CE7OWqYMmZj3TrhxKOzMhf5tyQkf7vLY9ns9thOmCJmZtUwVNzPqm2aFVYvZ6Xl5MMaFVbgCJ+Tr5oFU/IQjrpIMm5vlIB52LmOOTDVrlJhB5JINWuQlEPrmg2ZvnJhW0esx857lOJmj1mBdvL0+EvUMi6FliPkfU68IHPfMbO/PXviV00LN/MKEZK8hPYYMm5ktE/Slk0MS8jqgDBs2btm/2FSRU0HwUVrpZow4TNDHnmzHqEEETc7nZVhD3QRNzG7NE7TroWd6EXma4nm6D5oO9j6G+grgMmpjX3d0/NvvaVKN2GXQN1ZjPEfU2d0FzE5im1bRWi9pV0GoXt4cWYSvt1W6CZm+uw7T+5CJoYm6j1bSObHjQxNxebdiRV5ChQRPzsWac1sOCjnixImoxrSMZEnSLi8R0zjPLCnK6/fvw0fOAUS5MidJoev/BT+Vn/cNvCtFfzRrifSAR9MRqovYaNkFPTm1aEzTMrDxsb1ETNC6URu0lbILGL5GnNUFjU0nYo6MmaFxVEvWosAkaSaJM6+4/KQSOxISGFIKGFIKGFIKGFIKGFIKGFIKGFIKGFIKGFIKGFIKGFIKGFIKGFIKGFIKGFIKGFIKGFIKGFIKGlJv31+fT6JMAWnh/fT4xoSGFoCGFoCHlxuxz9xh9IkCNpWEmNKQQNKR8Bc3agajO22VCQ8pF0ExpRPOzWSY0pPwKmimNKNZaZUJDymrQTGl4t9UoExpSNoNmSsOrvTZ3JzRRw5trTV5dOYgaXqS0yA4NKUlBM6UxWmqDyROaqDFKTntZKwdRo7fc5rJ3aKJGLyWtVcXJn1XGEWqGZtVTDqY1WqttqvqxHVGjlRYtNY2RFQQlWg7FQ6YrYSPFEd/dD10XCBtrjlxTu+y/hA2zPvdb3W/oiHsuvR8aDH9CQeBaRj/1+gegSCMJmNycnAAAAABJRU5ErkJggg==">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="ZEKO Finapp">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 <style>
-/* ===== LOGIN SCREEN ===== */
-#login-overlay{
-  position:fixed;inset:0;z-index:99999;
-  background:linear-gradient(145deg,#1a2a50 0%,#0d1830 100%);
-  display:flex;align-items:center;justify-content:center;
-  flex-direction:column;padding:20px;
-}
-#login-overlay.hidden{display:none}
-.login-box{
-  width:100%;max-width:340px;
-  background:rgba(255,255,255,.06);
-  border:1px solid rgba(200,184,154,.22);
-  border-radius:22px;padding:36px 32px 32px;
-  text-align:center;
-  box-shadow:0 20px 60px rgba(0,0,0,.45);
-}
-.login-logo{width:72px;height:72px;margin:0 auto 18px;display:block;border-radius:16px}
-.login-title{color:#f5ede0;font-size:1.25rem;font-weight:700;letter-spacing:-.3px;margin-bottom:4px}
-.login-sub{color:rgba(200,184,154,.7);font-size:.75rem;margin-bottom:28px}
-.login-label{display:block;text-align:left;font-size:.7rem;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:rgba(200,184,154,.7);margin-bottom:6px;margin-top:16px}
-.login-label:first-of-type{margin-top:0}
-.login-input-wrap{position:relative}
-.login-input{
-  width:100%;padding:11px 40px 11px 14px;
-  background:rgba(255,255,255,.08);
-  border:1.5px solid rgba(200,184,154,.25);
-  border-radius:10px;color:#f5ede0;font-size:.9rem;
-  outline:none;transition:border-color .2s;
-}
-.login-input:focus{border-color:rgba(200,184,154,.6)}
-.login-input::placeholder{color:rgba(255,255,255,.25)}
-.login-eye{position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;color:rgba(200,184,154,.5);cursor:pointer;font-size:15px;padding:2px 4px}
-.login-btn{
-  margin-top:22px;width:100%;padding:12px;
-  background:linear-gradient(135deg,#c8b89a,#d4c3a5);
-  color:#1a2a50;font-size:.88rem;font-weight:700;
-  border:none;border-radius:11px;cursor:pointer;
-  transition:opacity .15s;letter-spacing:.2px;
-}
-.login-btn:hover{opacity:.9}
-.login-error{color:#FCA5A5;font-size:.75rem;margin-top:10px;min-height:18px}
-.login-footer{margin-top:20px;font-size:.68rem;color:rgba(200,184,154,.35)}
-
-/* Change PW modal */
-#pw-modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.55);display:flex;align-items:flex-end;justify-content:center;z-index:10000;backdrop-filter:blur(3px)}
-#pw-modal-overlay.hidden{display:none}
-.pw-modal-box{background:#fff;border-radius:20px 20px 0 0;padding:28px 24px;width:100%;max-width:420px}
-.pw-modal-title{font-size:.95rem;font-weight:700;color:#1E293B;margin-bottom:4px}
-.pw-modal-sub{font-size:.72rem;color:#94A3B8;margin-bottom:20px}
-.pw-modal-label{display:block;font-size:.7rem;font-weight:600;text-transform:uppercase;letter-spacing:.4px;color:#64748B;margin-bottom:5px;margin-top:14px}
-.pw-modal-input{width:100%;padding:10px 14px;border:1.5px solid #E2E8F0;border-radius:10px;font-size:.9rem;outline:none;transition:border-color .15s;color:#1E293B}
-.pw-modal-input:focus{border-color:#1E3A5F}
-.pw-modal-actions{display:flex;gap:8px;margin-top:22px}
-.pw-modal-actions .btn{flex:1;justify-content:center}
-.pw-modal-err{color:#DC2626;font-size:.73rem;margin-top:8px;min-height:16px}
-
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{font-size:14px;-webkit-text-size-adjust:100%}
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,sans-serif;background:#F0F4F8;color:#1A202C;min-height:100vh;-webkit-tap-highlight-color:transparent}
+
+/* LOGIN SCREEN */
+#login-screen{position:fixed;inset:0;background:linear-gradient(145deg,#1E3A5F 0%,#0d1830 100%);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px}
+#login-screen.hidden{display:none}
+#login-box{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:20px;padding:36px 32px;max-width:360px;width:100%;text-align:center;backdrop-filter:blur(10px)}
+.login-logo{width:64px;height:64px;margin:0 auto 16px;display:block;border-radius:14px}
+#login-box h2{font-size:1.3rem;font-weight:800;color:#fff;margin-bottom:4px}
+#login-box .login-sub{font-size:.8rem;color:rgba(255,255,255,.5);margin-bottom:24px}
+.login-inp{width:100%;padding:12px 16px;border:1.5px solid rgba(255,255,255,.15);border-radius:10px;font-size:.9rem;outline:none;background:rgba(255,255,255,.08);color:#fff;margin-bottom:10px;transition:border-color .2s}
+.login-inp::placeholder{color:rgba(255,255,255,.35)}
+.login-inp:focus{border-color:rgba(255,255,255,.5);background:rgba(255,255,255,.12)}
+#login-err{color:#FCA5A5;font-size:.75rem;min-height:16px;margin-bottom:8px}
+#login-btn{width:100%;padding:13px;background:#2563EB;color:#fff;border:none;border-radius:10px;font-size:.92rem;font-weight:700;cursor:pointer;transition:background .15s;margin-bottom:10px}
+#login-btn:hover,#login-btn:active{background:#1D4ED8}
+#toggle-signup{background:none;border:none;color:rgba(255,255,255,.45);font-size:.75rem;cursor:pointer;padding:4px;text-decoration:underline}
+#toggle-signup:hover{color:rgba(255,255,255,.7)}
+.sync-dot{font-size:.85rem;line-height:1;cursor:default;margin-right:2px}
 button{cursor:pointer;font-family:inherit;-webkit-appearance:none}
 input,select{font-family:inherit;-webkit-appearance:none}
 input[type=number]{-moz-appearance:textfield}
@@ -86,10 +34,8 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
 
 /* HEADER */
 .app-header{background:linear-gradient(135deg,#1E3A5F 0%,#2D5A8E 100%);color:#fff;padding:16px 20px;display:flex;justify-content:space-between;align-items:center;box-shadow:0 2px 10px rgba(0,0,0,.25);position:sticky;top:0;z-index:200;gap:12px}
-.header-left{display:flex;align-items:center;gap:10px}
 .header-left h1{font-size:1.1rem;font-weight:700;letter-spacing:-.2px}
 .header-left p{font-size:.7rem;opacity:.7;margin-top:1px}
-.header-logo{width:36px;height:36px;flex-shrink:0;border-radius:8px}
 .header-actions{display:flex;gap:6px;align-items:center;flex-shrink:0}
 
 /* BUTTONS */
@@ -340,65 +286,32 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
 </head>
 <body>
 
-<!-- ===== LOGIN OVERLAY ===== -->
-<div id="login-overlay">
-  <div class="login-box">
-    <svg class="login-logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><defs><linearGradient id="l-bg" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#1e2f58"/><stop offset="100%" stop-color="#0d1830"/></linearGradient><radialGradient id="l-glow" cx="40%" cy="35%" r="60%"><stop offset="0%" stop-color="#2a3f6e" stop-opacity="0.6"/><stop offset="100%" stop-color="#0d1830" stop-opacity="0"/></radialGradient><linearGradient id="l-lt" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#f5ede0"/><stop offset="100%" stop-color="#d4c3a5"/></linearGradient><clipPath id="l-clip"><rect width="512" height="512" rx="108" ry="108"/></clipPath></defs><rect width="512" height="512" rx="108" ry="108" fill="url(#l-bg)"/><rect width="512" height="512" rx="108" ry="108" fill="url(#l-glow)"/><circle cx="256" cy="256" r="204" fill="none" stroke="#c8b89a" stroke-width="1.2" opacity="0.30" clip-path="url(#l-clip)"/><circle cx="256" cy="256" r="188" fill="none" stroke="#c8b89a" stroke-width="0.7" opacity="0.18" clip-path="url(#l-clip)"/><rect x="253" y="142" width="1.5" height="228" fill="#c8b89a" opacity="0.45" rx="1"/><rect x="82" y="148" width="152" height="26" rx="5" fill="url(#l-lt)"/><polygon points="234,174 82,338 82,364 108,364 234,200" fill="url(#l-lt)"/><rect x="82" y="338" width="152" height="26" rx="5" fill="url(#l-lt)"/><rect x="278" y="148" width="26" height="216" rx="5" fill="url(#l-lt)"/><polygon points="304,250 430,148 400,148 278,235 278,265 304,265" fill="url(#l-lt)"/><polygon points="304,265 278,265 278,290 400,364 430,364" fill="url(#l-lt)"/><circle cx="96" cy="96" r="4" fill="#c8b89a" opacity="0.45"/><circle cx="416" cy="96" r="4" fill="#c8b89a" opacity="0.45"/><circle cx="96" cy="416" r="4" fill="#c8b89a" opacity="0.45"/><circle cx="416" cy="416" r="4" fill="#c8b89a" opacity="0.45"/></svg>
-    <div class="login-title">ZEKO Finapp</div>
-    <div class="login-sub" id="login-sub-text">Voer uw wachtwoord in om verder te gaan</div>
-    <div id="login-fields">
-      <label class="login-label" id="pw-label-1">Wachtwoord</label>
-      <div class="login-input-wrap">
-        <input class="login-input" type="password" id="login-pw" placeholder="••••••••" autocomplete="current-password">
-        <button class="login-eye" onclick="toggleEye('login-pw',this)" type="button">👁</button>
-      </div>
-      <div id="login-confirm-wrap" style="display:none">
-        <label class="login-label" style="margin-top:12px">Wachtwoord bevestigen</label>
-        <div class="login-input-wrap">
-          <input class="login-input" type="password" id="login-pw2" placeholder="••••••••" autocomplete="new-password">
-          <button class="login-eye" onclick="toggleEye('login-pw2',this)" type="button">👁</button>
-        </div>
-      </div>
-    </div>
-    <button class="login-btn" id="login-btn" onclick="loginAction()">Inloggen</button>
-    <div class="login-error" id="login-error"></div>
-    <div class="login-footer">ZEKO Financieel Dashboard &mdash; beveiligd</div>
-  </div>
-</div>
-
-<!-- Change password modal -->
-<div id="pw-modal-overlay" class="hidden" onclick="if(event.target===this)closePwModal()">
-  <div class="pw-modal-box">
-    <div class="pw-modal-title">🔒 Wachtwoord wijzigen</div>
-    <div class="pw-modal-sub">Kies een nieuw wachtwoord voor de ZEKO Finapp.</div>
-    <label class="pw-modal-label">Huidig wachtwoord</label>
-    <input class="pw-modal-input" type="password" id="pw-old" placeholder="Huidig wachtwoord" autocomplete="current-password">
-    <label class="pw-modal-label">Nieuw wachtwoord</label>
-    <input class="pw-modal-input" type="password" id="pw-new1" placeholder="Nieuw wachtwoord" autocomplete="new-password">
-    <label class="pw-modal-label">Nieuw wachtwoord bevestigen</label>
-    <input class="pw-modal-input" type="password" id="pw-new2" placeholder="Bevestig nieuw wachtwoord" autocomplete="new-password">
-    <div class="pw-modal-err" id="pw-modal-err"></div>
-    <div class="pw-modal-actions">
-      <button class="btn btn-ghost" onclick="closePwModal()">Annuleren</button>
-      <button class="btn btn-primary" onclick="changePwAction()">Opslaan</button>
-    </div>
+<!-- LOGIN SCREEN -->
+<div id="login-screen">
+  <div id="login-box">
+    <svg class="login-logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><defs><linearGradient id="lb-bg" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#1e2f58"/><stop offset="100%" stop-color="#0d1830"/></linearGradient><linearGradient id="lb-lt" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#f5ede0"/><stop offset="100%" stop-color="#d4c3a5"/></linearGradient></defs><rect width="512" height="512" rx="108" ry="108" fill="url(#lb-bg)"/><rect x="82" y="148" width="152" height="26" rx="5" fill="url(#lb-lt)"/><polygon points="234,174 82,338 82,364 108,364 234,200" fill="url(#lb-lt)"/><rect x="82" y="338" width="152" height="26" rx="5" fill="url(#lb-lt)"/><rect x="278" y="148" width="26" height="216" rx="5" fill="url(#lb-lt)"/><polygon points="304,250 430,148 400,148 278,235 278,265 304,265" fill="url(#lb-lt)"/><polygon points="304,265 278,265 278,290 400,364 430,364" fill="url(#lb-lt)"/></svg>
+    <h2>ZEKO Finapp</h2>
+    <p class="login-sub" id="login-sub">Inloggen met uw e-mailadres</p>
+    <input class="login-inp" type="email" id="login-email" placeholder="E-mailadres" autocomplete="email">
+    <input class="login-inp" type="password" id="login-pw" placeholder="Wachtwoord" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()">
+    <div id="login-err"></div>
+    <button id="login-btn" onclick="doLogin()">Inloggen</button>
+    <button id="toggle-signup" onclick="toggleSignup()">Nog geen account? Aanmelden</button>
   </div>
 </div>
 
 <header class="app-header">
   <div class="header-left">
-    <svg class="header-logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><defs><linearGradient id="zk-bg" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#1e2f58"/><stop offset="100%" stop-color="#0d1830"/></linearGradient><radialGradient id="zk-glow" cx="40%" cy="35%" r="60%"><stop offset="0%" stop-color="#2a3f6e" stop-opacity="0.6"/><stop offset="100%" stop-color="#0d1830" stop-opacity="0"/></radialGradient><linearGradient id="zk-lt" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#f5ede0"/><stop offset="100%" stop-color="#d4c3a5"/></linearGradient><clipPath id="zk-clip"><rect width="512" height="512" rx="108" ry="108"/></clipPath></defs><rect width="512" height="512" rx="108" ry="108" fill="url(#zk-bg)"/><rect width="512" height="512" rx="108" ry="108" fill="url(#zk-glow)"/><circle cx="256" cy="256" r="204" fill="none" stroke="#c8b89a" stroke-width="1.2" opacity="0.30" clip-path="url(#zk-clip)"/><circle cx="256" cy="256" r="188" fill="none" stroke="#c8b89a" stroke-width="0.7" opacity="0.18" clip-path="url(#zk-clip)"/><rect x="253" y="142" width="1.5" height="228" fill="#c8b89a" opacity="0.45" rx="1"/><rect x="82" y="148" width="152" height="26" rx="5" fill="url(#zk-lt)"/><polygon points="234,174 82,338 82,364 108,364 234,200" fill="url(#zk-lt)"/><rect x="82" y="338" width="152" height="26" rx="5" fill="url(#zk-lt)"/><rect x="278" y="148" width="26" height="216" rx="5" fill="url(#zk-lt)"/><polygon points="304,250 430,148 400,148 278,235 278,265 304,265" fill="url(#zk-lt)"/><polygon points="304,265 278,265 278,290 400,364 430,364" fill="url(#zk-lt)"/><circle cx="96" cy="96" r="4" fill="#c8b89a" opacity="0.45"/><circle cx="416" cy="96" r="4" fill="#c8b89a" opacity="0.45"/><circle cx="96" cy="416" r="4" fill="#c8b89a" opacity="0.45"/><circle cx="416" cy="416" r="4" fill="#c8b89a" opacity="0.45"/></svg>
-    <div>
-      <h1>ZEKO Finapp</h1>
-      <p>Liquiditeitsprognose &amp; Beleggingen</p>
-    </div>
+    <h1>ZEKO Finapp</h1>
+    <p>Liquiditeitsprognose &amp; Beleggingen</p>
   </div>
   <div class="header-actions">
+    <span id="sync-dot" class="sync-dot no-print" title="Synchronisatiestatus">☁️</span>
     <button class="btn btn-outline" onclick="exportData()">💾 Opslaan</button>
     <input type="file" id="importFile" accept=".json" style="display:none" onchange="importFile(event)">
     <button class="btn btn-outline" onclick="document.getElementById('importFile').click()">📂 Laden</button>
     <button class="btn btn-outline no-print" onclick="window.print()">🖨</button>
-    <button class="btn btn-outline no-print" onclick="openPwModal()" title="Wachtwoord wijzigen">🔒</button>
+    <button class="btn btn-outline no-print" onclick="doLogout()" title="Uitloggen">🚪</button>
   </div>
 </header>
 
@@ -1212,10 +1125,89 @@ function importFile(event){
 }
 
 // ================================================
-// AUTO-SAVE
+// SUPABASE
+// ================================================
+const SB_URL='https://cxrsenabrammufszuwwm.supabase.co';
+const SB_KEY='sb_publishable_ajdM64Kr-a7xcS6W9t4kNw_6HjrC2wE';
+const _sb=supabase.createClient(SB_URL,SB_KEY);
+
+let _isSignup=false;
+let _saveTimer=null;
+
+function toggleSignup(){
+  _isSignup=!_isSignup;
+  document.getElementById('login-sub').textContent=_isSignup?'Maak een nieuw account aan':'Inloggen met uw e-mailadres';
+  document.getElementById('login-btn').textContent=_isSignup?'Account aanmaken':'Inloggen';
+  document.getElementById('toggle-signup').textContent=_isSignup?'Al een account? Inloggen':'Nog geen account? Aanmelden';
+  document.getElementById('login-err').textContent='';
+}
+
+async function doLogin(){
+  const email=document.getElementById('login-email').value.trim();
+  const pw=document.getElementById('login-pw').value;
+  const err=document.getElementById('login-err');
+  if(!email||!pw){err.textContent='Vul e-mailadres en wachtwoord in.';return;}
+  document.getElementById('login-btn').textContent='Even wachten...';
+  document.getElementById('login-btn').disabled=true;
+  try{
+    let res;
+    if(_isSignup){
+      res=await _sb.auth.signUp({email,password:pw});
+    } else {
+      res=await _sb.auth.signInWithPassword({email,password:pw});
+    }
+    if(res.error) throw res.error;
+    await initAfterLogin();
+  } catch(e){
+    err.textContent=_isSignup?'Aanmelden mislukt: '+e.message:'Inloggen mislukt: controleer e-mailadres en wachtwoord.';
+    document.getElementById('login-btn').textContent=_isSignup?'Account aanmaken':'Inloggen';
+    document.getElementById('login-btn').disabled=false;
+  }
+}
+
+async function doLogout(){
+  if(!confirm('Wil je uitloggen?')) return;
+  await _sb.auth.signOut();
+  document.getElementById('login-screen').classList.remove('hidden');
+  document.getElementById('login-btn').textContent='Inloggen';
+  document.getElementById('login-btn').disabled=false;
+  document.getElementById('login-email').value='';
+  document.getElementById('login-pw').value='';
+  document.getElementById('login-err').textContent='';
+}
+
+async function initAfterLogin(){
+  document.getElementById('login-screen').classList.add('hidden');
+  setSyncDot('⏳');
+  const loaded=await loadFromSupabase();
+  if(!loaded){ loadFromStorage(); }
+  renderPrognose();
+  showToast(loaded?'☁️ Gegevens gesynchroniseerd':'📱 Lokale gegevens geladen');
+  setSyncDot('✅');
+}
+
+function setSyncDot(icon){ const el=document.getElementById('sync-dot'); if(el) el.textContent=icon; }
+
+async function saveToSupabase(){
+  try{
+    setSyncDot('🔄');
+    const {error}=await _sb.from('app_data').upsert({id:'main',data:S,updated_at:new Date().toISOString()});
+    setSyncDot(error?'⚠️':'✅');
+  } catch(e){ setSyncDot('⚠️'); }
+}
+
+async function loadFromSupabase(){
+  try{
+    const {data,error}=await _sb.from('app_data').select('data').eq('id','main').single();
+    if(data&&data.data){ S=migrate(data.data); saveToLocalOnly(); return true; }
+  } catch(e){}
+  return false;
+}
+
 // ================================================
 const STORAGE_KEY='zeko-finapp-v2';
-function saveToStorage(){ try{ localStorage.setItem(STORAGE_KEY,JSON.stringify(S)); }catch(e){} }
+function saveToLocalOnly(){ try{ localStorage.setItem(STORAGE_KEY,JSON.stringify(S)); }catch(e){} }
+function saveToStorage(){ saveToLocalOnly(); clearTimeout(_saveTimer); _saveTimer=setTimeout(saveToSupabase,1500); }
 function loadFromStorage(){ try{ const r=localStorage.getItem(STORAGE_KEY); if(r){ S=migrate(JSON.parse(r)); return true; } }catch(e){} return false; }
 
 function showToast(msg){
@@ -1226,105 +1218,15 @@ function showToast(msg){
 }
 
 // ================================================
-// PASSWORD PROTECTION
-// ================================================
-const PW_KEY = 'zeko-pw-hash-v1';
-const SESSION_KEY = 'zeko-session';
-
-async function sha256(str){
-  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
-  return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
-}
-
-function isFirstRun(){ return !localStorage.getItem(PW_KEY); }
-
-function initLoginScreen(){
-  const first = isFirstRun();
-  if(first){
-    document.getElementById('login-sub-text').textContent = 'Stel een wachtwoord in om uw gegevens te beveiligen';
-    document.getElementById('pw-label-1').textContent = 'Kies een wachtwoord';
-    document.getElementById('login-confirm-wrap').style.display = 'block';
-    document.getElementById('login-btn').textContent = 'Wachtwoord instellen';
-  }
-  document.getElementById('login-pw').addEventListener('keydown', e => { if(e.key==='Enter') loginAction(); });
-  document.getElementById('login-pw2').addEventListener('keydown', e => { if(e.key==='Enter') loginAction(); });
-}
-
-async function loginAction(){
-  const pw = document.getElementById('login-pw').value;
-  const err = document.getElementById('login-error');
-  if(!pw){ err.textContent='Voer een wachtwoord in.'; return; }
-
-  if(isFirstRun()){
-    const pw2 = document.getElementById('login-pw2').value;
-    if(pw.length < 4){ err.textContent='Minimaal 4 tekens vereist.'; return; }
-    if(pw !== pw2){ err.textContent='Wachtwoorden komen niet overeen.'; return; }
-    const hash = await sha256(pw);
-    localStorage.setItem(PW_KEY, hash);
-    unlockApp();
-  } else {
-    const hash = await sha256(pw);
-    if(hash === localStorage.getItem(PW_KEY)){
-      unlockApp();
-    } else {
-      err.textContent = 'Onjuist wachtwoord. Probeer opnieuw.';
-      document.getElementById('login-pw').value = '';
-      document.getElementById('login-pw').focus();
-    }
-  }
-}
-
-function unlockApp(){
-  sessionStorage.setItem(SESSION_KEY,'1');
-  document.getElementById('login-overlay').classList.add('hidden');
-}
-
-function toggleEye(inputId, btn){
-  const inp = document.getElementById(inputId);
-  if(inp.type==='password'){ inp.type='text'; btn.textContent='🙈'; }
-  else { inp.type='password'; btn.textContent='👁'; }
-}
-
-function openPwModal(){
-  document.getElementById('pw-old').value='';
-  document.getElementById('pw-new1').value='';
-  document.getElementById('pw-new2').value='';
-  document.getElementById('pw-modal-err').textContent='';
-  document.getElementById('pw-modal-overlay').classList.remove('hidden');
-  setTimeout(()=>document.getElementById('pw-old').focus(),100);
-}
-function closePwModal(){ document.getElementById('pw-modal-overlay').classList.add('hidden'); }
-
-async function changePwAction(){
-  const old = document.getElementById('pw-old').value;
-  const n1  = document.getElementById('pw-new1').value;
-  const n2  = document.getElementById('pw-new2').value;
-  const err = document.getElementById('pw-modal-err');
-
-  const oldHash = await sha256(old);
-  if(oldHash !== localStorage.getItem(PW_KEY)){ err.textContent='Huidig wachtwoord is onjuist.'; return; }
-  if(n1.length < 4){ err.textContent='Nieuw wachtwoord: minimaal 4 tekens.'; return; }
-  if(n1 !== n2){ err.textContent='Nieuwe wachtwoorden komen niet overeen.'; return; }
-
-  const newHash = await sha256(n1);
-  localStorage.setItem(PW_KEY, newHash);
-  closePwModal();
-  showToast('🔒 Wachtwoord gewijzigd');
-}
-
-// ================================================
 // INIT
 // ================================================
-initLoginScreen();
-// Check if already authenticated this session
-if(sessionStorage.getItem(SESSION_KEY) === '1'){
-  document.getElementById('login-overlay').classList.add('hidden');
-}
-document.getElementById('login-pw').focus();
-
-const hadData=loadFromStorage();
-renderPrognose();
-if(hadData) showToast('✅ Gegevens hersteld');
+_sb.auth.getSession().then(({data:{session}})=>{
+  if(session){
+    initAfterLogin();
+  } else {
+    document.getElementById('login-screen').classList.remove('hidden');
+  }
+});
 </script>
 </body>
 </html>
